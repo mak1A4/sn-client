@@ -8,5 +8,7 @@
         "outDir": "./dist",
         "strict": true,
         "types": ["node", "jest"]
-    }
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules"]
 }

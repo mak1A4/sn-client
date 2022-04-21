@@ -36,36 +36,35 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var R = require("ramda");
-var sn_login_1 = require("sn-login");
-var eval_script_1 = require("./eval-script");
-var eval_script_2 = require("./eval-script");
-var glide_ajax_1 = require("./glide-ajax");
-var export_xml_1 = require("./export-xml");
-function snRequest(snInstanceName, userName, userPassword) {
+var h2p = require("html2plaintext");
+function default_1(login, script) {
     return __awaiter(this, void 0, void 0, function () {
-        var login;
+        var postFormData, evalScriptResponse;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    login = null;
-                    if (!userPassword) return [3 /*break*/, 2];
-                    return [4 /*yield*/, (0, sn_login_1.default)(snInstanceName, userName, userPassword)];
+                    postFormData = new URLSearchParams({
+                        "script": script.script,
+                        "sysparm_ck": login.token,
+                        "sys_scope": "global",
+                        "runscript": "Run script",
+                        "quota_managed_transaction": "on",
+                        "record_for_rollback": (script.rollback) ? "on" : "off"
+                    }).toString();
+                    return [4 /*yield*/, login.wclient.post("/sys.scripts.do", postFormData, {
+                            headers: {
+                                "X-UserToken": login.token,
+                                "Connection": "keep-alive",
+                                "Cache-Control": "max-age=0",
+                                "User-Agent": "SN-Node Client",
+                                "Content-Type": "application/x-www-form-urlencoded"
+                            }
+                        })];
                 case 1:
-                    login = _a.sent();
-                    return [3 /*break*/, 4];
-                case 2: return [4 /*yield*/, (0, sn_login_1.default)(snInstanceName, userName)];
-                case 3:
-                    login = _a.sent();
-                    _a.label = 4;
-                case 4: return [2 /*return*/, {
-                        execScript: R.curry(eval_script_1.default)(login),
-                        evalScript: R.curry(eval_script_2.default)(login),
-                        glideAjax: R.curry(glide_ajax_1.default)(login),
-                        exportXml: R.curry(export_xml_1.default)(login)
-                    }];
+                    evalScriptResponse = _a.sent();
+                    return [2 /*return*/, h2p(evalScriptResponse.data)];
             }
         });
     });
 }
-exports.default = snRequest;
+exports.default = default_1;

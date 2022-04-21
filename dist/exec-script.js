@@ -36,36 +36,28 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var R = require("ramda");
-var sn_login_1 = require("sn-login");
 var eval_script_1 = require("./eval-script");
-var eval_script_2 = require("./eval-script");
-var glide_ajax_1 = require("./glide-ajax");
-var export_xml_1 = require("./export-xml");
-function snRequest(snInstanceName, userName, userPassword) {
+function default_1(login, scope, rollback) {
     return __awaiter(this, void 0, void 0, function () {
-        var login;
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    login = null;
-                    if (!userPassword) return [3 /*break*/, 2];
-                    return [4 /*yield*/, (0, sn_login_1.default)(snInstanceName, userName, userPassword)];
-                case 1:
-                    login = _a.sent();
-                    return [3 /*break*/, 4];
-                case 2: return [4 /*yield*/, (0, sn_login_1.default)(snInstanceName, userName)];
-                case 3:
-                    login = _a.sent();
-                    _a.label = 4;
-                case 4: return [2 /*return*/, {
-                        execScript: R.curry(eval_script_1.default)(login),
-                        evalScript: R.curry(eval_script_2.default)(login),
-                        glideAjax: R.curry(glide_ajax_1.default)(login),
-                        exportXml: R.curry(export_xml_1.default)(login)
-                    }];
-            }
+            return [2 /*return*/, function (execFn) {
+                    return __awaiter(this, void 0, void 0, function () {
+                        var evalResult;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, (0, eval_script_1.default)(login, {
+                                        "script": execFn.toString(),
+                                        "scope": scope,
+                                        "rollback": rollback
+                                    })];
+                                case 1:
+                                    evalResult = _a.sent();
+                                    return [2 /*return*/, evalResult];
+                            }
+                        });
+                    });
+                }];
         });
     });
 }
-exports.default = snRequest;
+exports.default = default_1;
