@@ -41,29 +41,21 @@ import evalScript from "./lib/script-eval";
 import glideAjax from "./lib/glide-ajax";
 import xmlExport from "./lib/xml-export";
 import xmlImport from "./lib/xml-import";
-function snRequest(snInstanceName, userName, userPassword) {
+function snRequest(snInstanceName, userName, auth) {
     return __awaiter(this, void 0, void 0, function () {
         var login;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    login = null;
-                    if (!userPassword) return [3 /*break*/, 2];
-                    return [4 /*yield*/, snlogin(snInstanceName, userName, userPassword)];
+                case 0: return [4 /*yield*/, snlogin(snInstanceName, userName, auth)];
                 case 1:
                     login = _a.sent();
-                    return [3 /*break*/, 4];
-                case 2: return [4 /*yield*/, snlogin(snInstanceName, userName)];
-                case 3:
-                    login = _a.sent();
-                    _a.label = 4;
-                case 4: return [2 /*return*/, {
-                        execScript: R.curry(execScript)(login),
-                        evalScript: R.curry(evalScript)(login),
-                        glideAjax: R.curry(glideAjax)(login),
-                        xmlExport: R.curry(xmlExport)(login),
-                        xmlImport: R.curry(xmlImport)(login)
-                    }];
+                    return [2 /*return*/, {
+                            execScript: R.curry(execScript)(login),
+                            evalScript: R.curry(evalScript)(login),
+                            glideAjax: R.curry(glideAjax)(login),
+                            xmlExport: R.curry(xmlExport)(login),
+                            xmlImport: R.curry(xmlImport)(login)
+                        }];
             }
         });
     });

@@ -1,3 +1,4 @@
+import { AuthInfo } from "sn-login";
 import { EvalScriptData, EvalScriptResponse } from "./lib/script-eval";
 import { GlideAjaxData } from "./lib/glide-ajax";
 import { IExportXmlInput } from "./lib/xml-export";
@@ -9,6 +10,5 @@ export interface IRequestFunctions {
     xmlExport(xml: IExportXmlInput): Promise<string>;
     xmlImport(xml: IXmlImportInput): Promise<number>;
 }
-declare function snRequest(snInstanceName: string, userName: string): Promise<IRequestFunctions>;
-declare function snRequest(snInstanceName: string, userName: string, userPassword?: string): Promise<IRequestFunctions>;
+declare function snRequest(snInstanceName: string, userName: string, auth?: AuthInfo): Promise<IRequestFunctions>;
 export default snRequest;

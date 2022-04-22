@@ -69,29 +69,21 @@ var script_eval_1 = __importDefault(require("./lib/script-eval"));
 var glide_ajax_1 = __importDefault(require("./lib/glide-ajax"));
 var xml_export_1 = __importDefault(require("./lib/xml-export"));
 var xml_import_1 = __importDefault(require("./lib/xml-import"));
-function snRequest(snInstanceName, userName, userPassword) {
+function snRequest(snInstanceName, userName, auth) {
     return __awaiter(this, void 0, void 0, function () {
         var login;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    login = null;
-                    if (!userPassword) return [3 /*break*/, 2];
-                    return [4 /*yield*/, (0, sn_login_1.default)(snInstanceName, userName, userPassword)];
+                case 0: return [4 /*yield*/, (0, sn_login_1.default)(snInstanceName, userName, auth)];
                 case 1:
                     login = _a.sent();
-                    return [3 /*break*/, 4];
-                case 2: return [4 /*yield*/, (0, sn_login_1.default)(snInstanceName, userName)];
-                case 3:
-                    login = _a.sent();
-                    _a.label = 4;
-                case 4: return [2 /*return*/, {
-                        execScript: R.curry(script_exec_1.default)(login),
-                        evalScript: R.curry(script_eval_1.default)(login),
-                        glideAjax: R.curry(glide_ajax_1.default)(login),
-                        xmlExport: R.curry(xml_export_1.default)(login),
-                        xmlImport: R.curry(xml_import_1.default)(login)
-                    }];
+                    return [2 /*return*/, {
+                            execScript: R.curry(script_exec_1.default)(login),
+                            evalScript: R.curry(script_eval_1.default)(login),
+                            glideAjax: R.curry(glide_ajax_1.default)(login),
+                            xmlExport: R.curry(xml_export_1.default)(login),
+                            xmlImport: R.curry(xml_import_1.default)(login)
+                        }];
             }
         });
     });
