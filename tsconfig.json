@@ -2,12 +2,10 @@
     "compilerOptions": {
         "lib": [ "es2015" ],
         "target": "es5",
+        "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "moduleResolution": "node",
         "downlevelIteration": true,
-        "module": "commonjs",
-        "declaration": true,
-        "outDir": "./dist",
         "strict": true,
         "types": ["node", "jest"]
     },

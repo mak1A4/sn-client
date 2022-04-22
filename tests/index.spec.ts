@@ -4,7 +4,7 @@ var user = process.env.SN_USER as string;
 var pass = process.env.SN_PASS as string;
 
 test("Test exportXml function", async () => {
-    let snclient = await snrequest(instance, user, pass);
+    let snclient = await snrequest(instance, user, { "password": pass });
     let result = await snclient.xmlExport({
         "table": "incident",
         "query": "active=true"
@@ -15,7 +15,7 @@ test("Test exportXml function", async () => {
 
 test("Test importXml function", async () => {
     let filePath = "/Users/mak/Development/Node/servicenow/sn-request/tests/sys_script_include_c773513c870b0550b8210f6c8bbb35fc.xml"
-    let snclient = await snrequest(instance, user, pass);
+    let snclient = await snrequest(instance, user, { "password": pass });
     let response  = await snclient.xmlImport({
         "target": "sys_script_include",
         "filePath": filePath
@@ -25,7 +25,7 @@ test("Test importXml function", async () => {
 });
 
 test("Test execScript function", async () => {
-    let snclient = await snrequest(instance, user, pass);
+    let snclient = await snrequest(instance, user, { "password": pass });
     let execFn = await snclient.execScript("global", true, true);
     let execResult = await execFn(function(inputObj: any) {
         //@ts-ignore
@@ -42,7 +42,7 @@ test("Test execScript function", async () => {
 });
 
 test("Test evalScript function", async () => {
-    let snclient = await snrequest(instance, user, pass);
+    let snclient = await snrequest(instance, user, { "password": pass });
     let evalResult = await snclient.evalScript({
         "script": "gs.print('$$TEST_PASSED$$')",
         "scope": "global",
@@ -54,7 +54,7 @@ test("Test evalScript function", async () => {
 });
 
 test("Test GlideAjax function", async () => {
-    let snclient = await snrequest(instance, user, pass);
+    let snclient = await snrequest(instance, user, { "password": pass });
     var parms = new Map<string, string>();
     parms.set("sysparm_table", "sys_script_include");
     parms.set("sysparm_sys_id", "59af71769368501079f4dc2a767ffb36");

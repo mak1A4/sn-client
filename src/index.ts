@@ -1,5 +1,5 @@
 import * as R from "ramda";
-import snlogin from "sn-login";
+import snlogin, { AuthInfo } from "sn-login";
 import execScript from "./lib/script-exec";
 import evalScript, { EvalScriptData, EvalScriptResponse } from "./lib/script-eval";
 import glideAjax, { GlideAjaxData } from "./lib/glide-ajax";
@@ -14,13 +14,9 @@ export interface IRequestFunctions {
     xmlImport(xml: IXmlImportInput): Promise<number>
 }
 
-async function snRequest(snInstanceName: string, userName: string): Promise<IRequestFunctions>;
-async function snRequest(snInstanceName: string, userName: string, userPassword?: string): Promise<IRequestFunctions>;
-async function snRequest(snInstanceName: string, userName: string, userPassword?: string): Promise<IRequestFunctions> {
+async function snRequest(snInstanceName: string, userName: string, auth?: AuthInfo): Promise<IRequestFunctions> {
 
-    let login = null;
-    if (userPassword) login = await snlogin(snInstanceName, userName, userPassword);
-    else login = await snlogin(snInstanceName, userName);
+    let login = await snlogin(snInstanceName, userName, auth);
 
     return {
         execScript: R.curry(execScript)(login),
