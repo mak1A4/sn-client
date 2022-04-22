@@ -35,24 +35,39 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var eval_script_1 = require("./eval-script");
-function default_1(login, scope, rollback) {
+var script_eval_1 = __importDefault(require("./script-eval"));
+function default_1(login, scope, rollback, timeout) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            return [2 /*return*/, function (execFn) {
+            return [2 /*return*/, function (execFn, inputObject) {
+                    if (inputObject === void 0) { inputObject = {}; }
                     return __awaiter(this, void 0, void 0, function () {
-                        var evalResult;
+                        var execScript, evalResult, jsonResultMatch, jsonResultStr;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
-                                case 0: return [4 /*yield*/, (0, eval_script_1.default)(login, {
-                                        "script": execFn.toString(),
-                                        "scope": scope,
-                                        "rollback": rollback
-                                    })];
+                                case 0:
+                                    execScript = "var inputObj = JSON.parse('".concat(JSON.stringify(inputObject), "');\n             var result = (").concat(execFn.toString(), ")(inputObj);\n             if (!result) result = {};\n             gs.debug(\"=####\" + JSON.stringify(result) + \"####=\")");
+                                    return [4 /*yield*/, (0, script_eval_1.default)(login, {
+                                            "script": execScript,
+                                            "scope": scope,
+                                            "rollback": rollback,
+                                            "timeout": timeout
+                                        })];
                                 case 1:
                                     evalResult = _a.sent();
-                                    return [2 /*return*/, evalResult];
+                                    jsonResultMatch = evalResult.response.match(/=####.*?####=/g);
+                                    if (jsonResultMatch) {
+                                        jsonResultStr = jsonResultMatch.map(function (s) { return s; })[0].replace("####=", "").replace("=####", "");
+                                        return [2 /*return*/, {
+                                                "result": JSON.parse(jsonResultStr),
+                                                "rollbackLink": evalResult.rollbackLink
+                                            }];
+                                    }
+                                    return [2 /*return*/];
                             }
                         });
                     });

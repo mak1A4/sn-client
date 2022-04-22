@@ -27,7 +27,7 @@ test("Test importXml function", async () => {
 test("Test execScript function", async () => {
     let snclient = await snrequest(instance, user, pass);
     let execFn = await snclient.execScript("global", true, true);
-    let execResult = await execFn((inputObj: any) => {
+    let execResult = await execFn(function(inputObj: any) {
         //@ts-ignore
         var testProp = gs.getProperty("sn_appclient.instance_type");
         return {

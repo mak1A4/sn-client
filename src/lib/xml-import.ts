@@ -1,7 +1,7 @@
 import { LoginData } from "sn-login";
 import * as fs from "fs";
 import * as path from "path";
-import * as request from "request";
+import request from "request";
 
 export interface IXmlImportInput {
     target: string,
@@ -47,7 +47,7 @@ export default async function (login: LoginData, input: IXmlImportInput): Promis
                     }
                 }
             }
-        }, (error, response) => {
+        }, (error: any, response: any) => {
             if (error) reject(error);
             else resolve(response.statusCode);
         });

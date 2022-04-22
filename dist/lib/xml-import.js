@@ -62,38 +62,56 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var R = __importStar(require("ramda"));
-var sn_login_1 = __importDefault(require("sn-login"));
-var script_exec_1 = __importDefault(require("./lib/script-exec"));
-var script_eval_1 = __importDefault(require("./lib/script-eval"));
-var glide_ajax_1 = __importDefault(require("./lib/glide-ajax"));
-var xml_export_1 = __importDefault(require("./lib/xml-export"));
-var xml_import_1 = __importDefault(require("./lib/xml-import"));
-function snRequest(snInstanceName, userName, userPassword) {
+var fs = __importStar(require("fs"));
+var path = __importStar(require("path"));
+var request_1 = __importDefault(require("request"));
+function default_1(login, input) {
     return __awaiter(this, void 0, void 0, function () {
-        var login;
+        var defaultHeader, baseURL, xjar, filename;
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    login = null;
-                    if (!userPassword) return [3 /*break*/, 2];
-                    return [4 /*yield*/, (0, sn_login_1.default)(snInstanceName, userName, userPassword)];
-                case 1:
-                    login = _a.sent();
-                    return [3 /*break*/, 4];
-                case 2: return [4 /*yield*/, (0, sn_login_1.default)(snInstanceName, userName)];
-                case 3:
-                    login = _a.sent();
-                    _a.label = 4;
-                case 4: return [2 /*return*/, {
-                        execScript: R.curry(script_exec_1.default)(login),
-                        evalScript: R.curry(script_eval_1.default)(login),
-                        glideAjax: R.curry(glide_ajax_1.default)(login),
-                        xmlExport: R.curry(xml_export_1.default)(login),
-                        xmlImport: R.curry(xml_import_1.default)(login)
-                    }];
+            defaultHeader = {
+                "Accept": "*/*",
+                "Cache-Control": "max-age=0",
+                "Connection": "keep-alive",
+                "User-Agent": "Mozilla/sncmder",
+                "Accept-Encoding": "gzip, deflate",
+                "Accept-Language": "en-US,en;q=0.8",
+                "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+            };
+            baseURL = login.wclient.defaults.baseURL;
+            xjar = request_1.default.jar();
+            if (login.cookieJar) {
+                login.cookieJar.getCookiesSync(baseURL).forEach(function (c) {
+                    xjar.setCookie(c.cookieString(), baseURL);
+                });
             }
+            filename = path.basename(input.filePath);
+            return [2 /*return*/, new Promise(function (resolve, reject) {
+                    (0, request_1.default)(login.wclient.defaults.baseURL + "/sys_upload.do", {
+                        "method": "POST",
+                        "headers": defaultHeader,
+                        "followAllRedirects": true,
+                        "gzip": true,
+                        "jar": xjar,
+                        "formData": {
+                            "sysparm_ck": login.token,
+                            "sysparm_target": input.target,
+                            "file": {
+                                "value": fs.createReadStream(input.filePath),
+                                "options": {
+                                    "filename": filename,
+                                    "contentType": "application/xml"
+                                }
+                            }
+                        }
+                    }, function (error, response) {
+                        if (error)
+                            reject(error);
+                        else
+                            resolve(response.statusCode);
+                    });
+                })];
         });
     });
 }
-exports.default = snRequest;
+exports.default = default_1;

@@ -2,6 +2,8 @@
     "compilerOptions": {
         "lib": [ "es2015" ],
         "target": "es5",
+        "esModuleInterop": true,
+        "moduleResolution": "node",
         "downlevelIteration": true,
         "module": "commonjs",
         "declaration": true,
