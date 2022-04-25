@@ -1,4 +1,7 @@
-import snrequest from "../src/index";
+import snrequest from "./src/index";
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 var instance = process.env.SN_INSTANCE as string;
 var user = process.env.SN_USER as string;
