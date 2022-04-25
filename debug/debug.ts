@@ -1,7 +1,13 @@
 import snrequest from "../src/index";
 
+var instance = process.env.SN_INSTANCE as string;
+var user = process.env.SN_USER as string;
+var pass = process.env.SN_PASS as string;
+
 (async function() {
-    let $sn = await snrequest("devtwinformatics", "m.kirchweger@softpoint.at");
+    let $sn = await snrequest(instance, user, {
+        "password": pass
+    });
     let xmlStr = await $sn.xmlExport({
         "table": "incident",
         "query": "sys_id=de25e1be97590110b06ef3e3f153af84"
