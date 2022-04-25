@@ -64,6 +64,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.snRequest = void 0;
 var R = __importStar(require("ramda"));
+var readline_1 = require("readline");
 var sn_login_1 = __importDefault(require("sn-login"));
 var script_exec_1 = __importDefault(require("./lib/script-exec"));
 var script_eval_1 = __importDefault(require("./lib/script-eval"));
@@ -72,12 +73,36 @@ var xml_export_1 = __importDefault(require("./lib/xml-export"));
 var xml_import_1 = __importDefault(require("./lib/xml-import"));
 function snRequest(snInstanceName, userName, auth) {
     return __awaiter(this, void 0, void 0, function () {
-        var login;
+        var login, e_1, rl_1, questionText_1, mfaToken, authObj;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, (0, sn_login_1.default)(snInstanceName, userName, auth)];
+                case 0:
+                    _a.trys.push([0, 2, , 5]);
+                    return [4 /*yield*/, (0, sn_login_1.default)(snInstanceName, userName, auth)];
                 case 1:
                     login = _a.sent();
+                    return [3 /*break*/, 5];
+                case 2:
+                    e_1 = _a.sent();
+                    rl_1 = (0, readline_1.createInterface)({
+                        input: process.stdin,
+                        output: process.stdout
+                    });
+                    questionText_1 = "Login failed, try again with new MFA Token: ";
+                    return [4 /*yield*/, new Promise(function (resolve) { return rl_1.question(questionText_1, resolve); })
+                            .finally(function () { return rl_1.close(); })];
+                case 3:
+                    mfaToken = _a.sent();
+                    authObj = { "mfaToken": mfaToken };
+                    if (auth && auth.password)
+                        authObj.password = auth.password;
+                    return [4 /*yield*/, (0, sn_login_1.default)(snInstanceName, userName, authObj)];
+                case 4:
+                    login = _a.sent();
+                    return [3 /*break*/, 5];
+                case 5:
+                    if (!login)
+                        throw "Login has failed ...";
                     return [2 /*return*/, {
                             execScript: R.curry(script_exec_1.default)(login),
                             evalScript: R.curry(script_eval_1.default)(login),

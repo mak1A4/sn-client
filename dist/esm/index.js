@@ -35,6 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import * as R from "ramda";
+import { createInterface } from "readline";
 import snlogin from "sn-login";
 import execScript from "./lib/script-exec";
 import evalScript from "./lib/script-eval";
@@ -43,12 +44,36 @@ import xmlExport from "./lib/xml-export";
 import xmlImport from "./lib/xml-import";
 export function snRequest(snInstanceName, userName, auth) {
     return __awaiter(this, void 0, void 0, function () {
-        var login;
+        var login, e_1, rl_1, questionText_1, mfaToken, authObj;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, snlogin(snInstanceName, userName, auth)];
+                case 0:
+                    _a.trys.push([0, 2, , 5]);
+                    return [4 /*yield*/, snlogin(snInstanceName, userName, auth)];
                 case 1:
                     login = _a.sent();
+                    return [3 /*break*/, 5];
+                case 2:
+                    e_1 = _a.sent();
+                    rl_1 = createInterface({
+                        input: process.stdin,
+                        output: process.stdout
+                    });
+                    questionText_1 = "Login failed, try again with new MFA Token: ";
+                    return [4 /*yield*/, new Promise(function (resolve) { return rl_1.question(questionText_1, resolve); })
+                            .finally(function () { return rl_1.close(); })];
+                case 3:
+                    mfaToken = _a.sent();
+                    authObj = { "mfaToken": mfaToken };
+                    if (auth && auth.password)
+                        authObj.password = auth.password;
+                    return [4 /*yield*/, snlogin(snInstanceName, userName, authObj)];
+                case 4:
+                    login = _a.sent();
+                    return [3 /*break*/, 5];
+                case 5:
+                    if (!login)
+                        throw "Login has failed ...";
                     return [2 /*return*/, {
                             execScript: R.curry(execScript)(login),
                             evalScript: R.curry(evalScript)(login),
