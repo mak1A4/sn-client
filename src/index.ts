@@ -14,7 +14,7 @@ export interface IRequestFunctions {
     xmlImport(xml: IXmlImportInput): Promise<number>
 }
 
-async function snRequest(snInstanceName: string, userName: string, auth?: AuthInfo): Promise<IRequestFunctions> {
+export async function snRequest(snInstanceName: string, userName: string, auth?: AuthInfo): Promise<IRequestFunctions> {
 
     let login = await snlogin(snInstanceName, userName, auth);
 

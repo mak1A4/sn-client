@@ -10,5 +10,5 @@ export interface IRequestFunctions {
     xmlExport(xml: IExportXmlInput): Promise<string>;
     xmlImport(xml: IXmlImportInput): Promise<number>;
 }
-declare function snRequest(snInstanceName: string, userName: string, auth?: AuthInfo): Promise<IRequestFunctions>;
+export declare function snRequest(snInstanceName: string, userName: string, auth?: AuthInfo): Promise<IRequestFunctions>;
 export default snRequest;

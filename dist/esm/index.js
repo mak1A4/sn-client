@@ -41,7 +41,7 @@ import evalScript from "./lib/script-eval";
 import glideAjax from "./lib/glide-ajax";
 import xmlExport from "./lib/xml-export";
 import xmlImport from "./lib/xml-import";
-function snRequest(snInstanceName, userName, auth) {
+export function snRequest(snInstanceName, userName, auth) {
     return __awaiter(this, void 0, void 0, function () {
         var login;
         return __generator(this, function (_a) {

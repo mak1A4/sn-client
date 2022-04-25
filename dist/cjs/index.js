@@ -62,6 +62,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.snRequest = void 0;
 var R = __importStar(require("ramda"));
 var sn_login_1 = __importDefault(require("sn-login"));
 var script_exec_1 = __importDefault(require("./lib/script-exec"));
@@ -88,4 +89,5 @@ function snRequest(snInstanceName, userName, auth) {
         });
     });
 }
+exports.snRequest = snRequest;
 exports.default = snRequest;
