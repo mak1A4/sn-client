@@ -1,8 +1,15 @@
 import { LoginData } from "sn-login";
 import evalScript from "./eval";
+import { TexecFn, TsnExecFn, IExecFnResponse } from "./exec";
 
-export default async function (login: LoginData, scope: string, rollback: boolean, timeout: boolean): Promise<any> {
-  return async function (execFn: Function, inputObject: any = {}): Promise<any> {
+export interface IExecFnQuickResponse extends IExecFnResponse {
+  "rawOutput": string
+}
+
+export default async function (
+  login: LoginData, scope: string, rollback: boolean, timeout: boolean
+): Promise<TexecFn> {
+  return async function (execFn: TsnExecFn, inputObject: any = {}): Promise<IExecFnQuickResponse> {
     let execScript =
       `var inputObj = JSON.parse('${JSON.stringify(inputObject)}');
        var result = (${execFn.toString()})(inputObj);
@@ -25,7 +32,7 @@ export default async function (login: LoginData, scope: string, rollback: boolea
 
       return {
         "result": resultObj,
-        "response": responseStr,
+        "rawOutput": responseStr,
         "rollbackLink": evalResult.rollbackLink
       }
     }

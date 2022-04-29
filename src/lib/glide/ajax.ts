@@ -1,36 +1,18 @@
 import { LoginData } from "sn-login";
-import { XMLParser } from "fast-xml-parser";
+import xmlHttp, { IXmlHttpOptions } from "../util/xmlHttp";
 
-export interface GlideAjaxData {
-    sysparm_processor: string,
+export interface GlideAjaxData extends IXmlHttpOptions {
     sysparm_name: string,
-    sysparm_scope: string,
-    sysparm_xyz: Map<string, string>
+    sysparm_scope: string
 }
 
 export default async function (login: LoginData, data: GlideAjaxData): Promise<string> {
     
-    let postBodyObj = {
-        "sysparm_processor": data.sysparm_processor,
-        "sysparm_name": data.sysparm_name,
-        "sysparm_scope": data.sysparm_scope
-    } as any;
-    for (let [key, value] of data.sysparm_xyz) {
-        postBodyObj[key] = value;
-    }
-    let postFormData = new URLSearchParams(postBodyObj).toString();
+    data.sysparm_xyz.set("sysparm_name", data.sysparm_name);
+    data.sysparm_xyz.set("sysparm_scope", data.sysparm_scope);
 
-    let response = await login.wclient.post("/xmlhttp.do", postFormData, {
-        "headers": {
-            "X-UserToken": login.token
-        }
+    return await xmlHttp(login, {
+      "sysparm_processor": data.sysparm_processor,
+      "sysparm_xyz": data.sysparm_xyz
     });
-    const parser = new XMLParser({
-        ignoreAttributes: false,
-        attributeNamePrefix: "_",
-        allowBooleanAttributes: true
-    });
-    let xmlResponse = response.data;
-    var jsonResponse = parser.parse(xmlResponse);
-    return jsonResponse.xml._answer
 }

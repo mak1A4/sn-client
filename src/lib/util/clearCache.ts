@@ -2,7 +2,7 @@ import { LoginData } from "sn-login";
 import execQuick from "../script/execQuick";
 const h2p = require("html2plaintext");
 
-export default async function (login: LoginData, invalidate?: boolean): Promise<string> {
+export default async function clearCache(login: LoginData, invalidate?: boolean): Promise<string> {
   let response = await login.wclient.get("/cache.do", {
     "headers": {
       "X-UserToken": login.token,

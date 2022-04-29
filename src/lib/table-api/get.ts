@@ -44,7 +44,7 @@ export async function retrieveRecord(
 // Rather than getting 0 results you'll get a 403 forbidden message if an invalid query is used
 export async function retrieveRecords(
   login: LoginData, table: string, options?: IRetrieveRecordsOptions
-): Promise<any> {
+): Promise<any[]> {
   let urlParmObj: any = {};
   if (options) {
     if (options.encodedQuery) urlParmObj.sysparm_query = options.encodedQuery;

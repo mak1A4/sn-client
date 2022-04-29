@@ -6,8 +6,20 @@ import attachmentRetrieve from "../attachment/retrieve";
 import attachmentDelete from "../attachment/delete";
 import * as fs from "fs";
 
-export default async function (login: LoginData, scope: string, rollback: boolean, timeout: boolean): Promise<any> {
-  return async function (execFn: Function, inputObject: any = {}): Promise<any> {
+export interface IExecFnResponse {
+  result: any,
+  rollbackLink: string
+}
+
+declare function snfn(inputObj?: any): any
+export type TsnExecFn = typeof snfn;
+declare function execute(execFn: Function, input?: any): Promise<any>
+export type TexecFn = typeof execute;
+
+export default async function (
+  login: LoginData, scope: string, rollback: boolean, timeout: boolean
+): Promise<TexecFn> {
+  return async function (snExecFn: TsnExecFn, inputObject: any = {}): Promise<IExecFnResponse> {
 
     let fakeSysId = randomUUID().replace(/-/g, "")
     let inputAttachmentSysId = await attachmentUpload(
@@ -18,7 +30,7 @@ export default async function (login: LoginData, scope: string, rollback: boolea
 
     let execScript =
       `var inputObj = (${getInputObjFnStr})('${inputAttachmentSysId}');
-       var result = (${execFn.toString()})(inputObj);
+       var result = (${snExecFn.toString()})(inputObj);
        var outAttachmentSysId = (${getOutputObjFnStr})(result);
        gs.debug("=####" + outAttachmentSysId + "####=")`;
 
@@ -37,7 +49,7 @@ export default async function (login: LoginData, scope: string, rollback: boolea
       let resultObj = {};
       try {
         resultObj = JSON.parse(resultObjStr);
-      } catch(err) {
+      } catch (err) {
         let buff = Buffer.from(resultObjStr, "base64");
         resultObj = JSON.parse(buff.toString("utf8"));
       }
@@ -47,7 +59,7 @@ export default async function (login: LoginData, scope: string, rollback: boolea
       return {
         "result": resultObj,
         "rollbackLink": evalResult.rollbackLink
-      }
+      };
     }
   };
 }
