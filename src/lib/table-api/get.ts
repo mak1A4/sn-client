@@ -40,6 +40,8 @@ export async function retrieveRecord(
   return response.data.result;
 }
 
+// If you use the Table API, and have glide.invalid_query.returns_no_rows set to true.
+// Rather than getting 0 results you'll get a 403 forbidden message if an invalid query is used
 export async function retrieveRecords(
   login: LoginData, table: string, options?: IRetrieveRecordsOptions
 ): Promise<any> {

@@ -9,6 +9,9 @@ import tableSchema from "./src/lib/util/tableSchema";
 import execQuick from "./src/lib/script/execQuick";
 import { retrieveRecords, streamRecordsToFile } from "./src/lib/table-api/get"
 import createRecord from "./src/lib/table-api/post"
+import clearCache from "./src/lib/util/clearCache"
+import getUpdateSetList from "./src/lib/update-set/getCurrentList"
+import exportUpdateSet from "./src/lib/update-set/exportToXml"
 
 dotenv.config();
 
@@ -32,9 +35,16 @@ var pass = process.env.SN_PASS as string;
   //   "encodedQuery": "active=true",
   //   "chunkSize": 5
   // });
-  let res = await createRecord(login, "incident", {
-    "short_description": "test"
-  });
+  // let res = await createRecord(login, "incident", {
+  //   "short_description": "test"
+  // });
+
+  // let res = await clearCache(login, true);
+  // console.log(res);
+
+  // let res = await getUpdateSetList(login);
+
+  let res = await exportUpdateSet(login, "761bd1cfdb190510ecec1a4813961962", "global");
   console.log(res);
 
   //let res = await tableSchema(login, "incident");
