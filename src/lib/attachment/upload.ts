@@ -11,7 +11,10 @@ export enum UploadType {
   PlainText = "plain_text"
 }
 
-export default async function (login: LoginData, uploadType: UploadType, table: string, sysId: string, input: string, fileName?: string): Promise<string> {
+export default async function (
+  login: LoginData, uploadType: UploadType, table: string,
+  sysId: string, input: string, fileName?: string
+): Promise<string> {
   
   let contentType = "text/plain";
   switch (uploadType) {

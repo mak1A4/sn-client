@@ -66,14 +66,32 @@ exports.snRequest = void 0;
 var R = __importStar(require("ramda"));
 var readline_1 = require("readline");
 var sn_login_1 = __importDefault(require("sn-login"));
-var script_exec_1 = __importDefault(require("./lib/script-exec"));
-var script_eval_1 = __importDefault(require("./lib/script-eval"));
-var glide_ajax_1 = __importDefault(require("./lib/glide-ajax"));
-var xml_export_1 = __importDefault(require("./lib/xml-export"));
-var xml_import_1 = __importDefault(require("./lib/xml-import"));
+var exec_1 = __importDefault(require("./lib/script/exec"));
+var execQuick_1 = __importDefault(require("./lib/script/execQuick"));
+var ajax_1 = __importDefault(require("./lib/glide/ajax"));
+var exportXml_1 = __importDefault(require("./lib/util/exportXml"));
+var importXml_1 = __importDefault(require("./lib/util/importXml"));
+var xmlHttp_1 = __importDefault(require("./lib/util/xmlHttp"));
+var tableSchema_1 = __importDefault(require("./lib/util/tableSchema"));
+var clearCache_1 = __importDefault(require("./lib/util/clearCache"));
+var eval_1 = __importDefault(require("./lib/script/eval"));
+var get_1 = require("./lib/table-api/get");
+var getCurrentList_1 = __importDefault(require("./lib/application/getCurrentList"));
+var switch_1 = __importDefault(require("./lib/application/switch"));
+var retrieve_1 = __importDefault(require("./lib/attachment/retrieve"));
+var delete_1 = __importDefault(require("./lib/attachment/delete"));
+var upload_1 = __importDefault(require("./lib/attachment/upload"));
+var create_1 = __importDefault(require("./lib/update-set/create"));
+var commit_1 = __importDefault(require("./lib/update-set/commit"));
+var exportToXml_1 = __importDefault(require("./lib/update-set/exportToXml"));
+var preview_1 = __importDefault(require("./lib/update-set/preview"));
+var validate_1 = __importDefault(require("./lib/update-set/validate"));
+var switch_2 = __importDefault(require("./lib/update-set/switch"));
+var getCurrentList_2 = __importDefault(require("./lib/update-set/getCurrentList"));
 function snRequest(snInstanceName, userName, auth) {
     return __awaiter(this, void 0, void 0, function () {
-        var login, e_1, rl_1, questionText_1, mfaToken, authObj;
+        var login, e_1, rl_1, questionText_1, mfaToken, authObj, getLoginData;
+        var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -103,12 +121,89 @@ function snRequest(snInstanceName, userName, auth) {
                 case 5:
                     if (!login)
                         throw "Login has failed ...";
+                    getLoginData = function () {
+                        return login;
+                    };
                     return [2 /*return*/, {
-                            execScript: R.curry(script_exec_1.default)(login),
-                            evalScript: R.curry(script_eval_1.default)(login),
-                            glideAjax: R.curry(glide_ajax_1.default)(login),
-                            xmlExport: R.curry(xml_export_1.default)(login),
-                            xmlImport: R.curry(xml_import_1.default)(login)
+                            "getLoginData": getLoginData,
+                            "script": {
+                                "eval": R.curry(eval_1.default)(login),
+                                "executeFn": R.curry(exec_1.default)(login),
+                                "executeFnQuick": R.curry(execQuick_1.default)(login)
+                            },
+                            "application": {
+                                "getCurrentList": function () {
+                                    return __awaiter(this, void 0, void 0, function () {
+                                        return __generator(this, function (_a) {
+                                            return [2 /*return*/, (0, getCurrentList_1.default)(login)];
+                                        });
+                                    });
+                                },
+                                "switch": function (applicationSysId) {
+                                    return __awaiter(this, void 0, void 0, function () {
+                                        return __generator(this, function (_a) {
+                                            return [2 /*return*/, (0, switch_1.default)(login, applicationSysId)];
+                                        });
+                                    });
+                                }
+                            },
+                            "attachment": {
+                                "retrieve": R.curry(retrieve_1.default)(login),
+                                "delete": R.curry(delete_1.default)(login),
+                                "upload": function (uploadType, table, sysId, input, fileName) { return __awaiter(_this, void 0, void 0, function () {
+                                    return __generator(this, function (_a) {
+                                        return [2 /*return*/, (0, upload_1.default)(login, uploadType, table, sysId, input, fileName)];
+                                    });
+                                }); }
+                            },
+                            "glide": {
+                                "glideAjax": R.curry(ajax_1.default)(login)
+                            },
+                            "tableApi": {
+                                "retrieveRecord": function (table, sysId, options) {
+                                    return __awaiter(this, void 0, void 0, function () {
+                                        return __generator(this, function (_a) {
+                                            return [2 /*return*/, (0, get_1.retrieveRecord)(login, table, sysId, options)];
+                                        });
+                                    });
+                                },
+                                "retrieveRecords": function (table, options) {
+                                    return __awaiter(this, void 0, void 0, function () {
+                                        return __generator(this, function (_a) {
+                                            return [2 /*return*/, (0, get_1.retrieveRecords)(login, table, options)];
+                                        });
+                                    });
+                                },
+                                "streamRecordsToFile": R.curry(get_1.streamRecordsToFile)(login)
+                            },
+                            "util": {
+                                "xmlImport": R.curry(importXml_1.default)(login),
+                                "xmlExport": R.curry(exportXml_1.default)(login),
+                                "xmlHttpRequest": R.curry(xmlHttp_1.default)(login),
+                                "getTableSchema": R.curry(tableSchema_1.default)(login),
+                                "clearCache": function (invalidate) {
+                                    return __awaiter(this, void 0, void 0, function () {
+                                        return __generator(this, function (_a) {
+                                            return [2 /*return*/, (0, clearCache_1.default)(login, invalidate)];
+                                        });
+                                    });
+                                }
+                            },
+                            "updateSet": {
+                                "create": R.curry(create_1.default)(login),
+                                "getCurrentList": function () {
+                                    return __awaiter(this, void 0, void 0, function () {
+                                        return __generator(this, function (_a) {
+                                            return [2 /*return*/, (0, getCurrentList_2.default)(login)];
+                                        });
+                                    });
+                                },
+                                "exportToXml": R.curry(exportToXml_1.default)(login),
+                                "preview": R.curry(preview_1.default)(login),
+                                "switch": R.curry(switch_2.default)(login),
+                                "validate": R.curry(validate_1.default)(login),
+                                "commit": R.curry(commit_1.default)(login)
+                            }
                         }];
             }
         });

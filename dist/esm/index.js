@@ -37,14 +37,32 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 import * as R from "ramda";
 import { createInterface } from "readline";
 import snlogin from "sn-login";
-import execScript from "./lib/script-exec";
-import evalScript from "./lib/script-eval";
-import glideAjax from "./lib/glide-ajax";
-import xmlExport from "./lib/xml-export";
-import xmlImport from "./lib/xml-import";
+import execScript from "./lib/script/exec";
+import execQuick from "./lib/script/execQuick";
+import glideAjax from "./lib/glide/ajax";
+import xmlExport from "./lib/util/exportXml";
+import xmlImport from "./lib/util/importXml";
+import xmlHttp from "./lib/util/xmlHttp";
+import getTableSchema from "./lib/util/tableSchema";
+import clearCache from "./lib/util/clearCache";
+import evalScript from "./lib/script/eval";
+import { retrieveRecord, retrieveRecords, streamRecordsToFile } from "./lib/table-api/get";
+import getCurrentAppList from "./lib/application/getCurrentList";
+import switchApp from "./lib/application/switch";
+import retrieveAttachment from "./lib/attachment/retrieve";
+import deleteAttachment from "./lib/attachment/delete";
+import uploadAttachment from "./lib/attachment/upload";
+import createUpdateSet from "./lib/update-set/create";
+import commitUpdateSet from "./lib/update-set/commit";
+import exportUpdateSetToXml from "./lib/update-set/exportToXml";
+import previewUpdateSet from "./lib/update-set/preview";
+import validateUpdateSet from "./lib/update-set/validate";
+import switchUpdateSet from "./lib/update-set/switch";
+import getCurrentUpdateSetList from "./lib/update-set/getCurrentList";
 export function snRequest(snInstanceName, userName, auth) {
     return __awaiter(this, void 0, void 0, function () {
-        var login, e_1, rl_1, questionText_1, mfaToken, authObj;
+        var login, e_1, rl_1, questionText_1, mfaToken, authObj, getLoginData;
+        var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -74,12 +92,89 @@ export function snRequest(snInstanceName, userName, auth) {
                 case 5:
                     if (!login)
                         throw "Login has failed ...";
+                    getLoginData = function () {
+                        return login;
+                    };
                     return [2 /*return*/, {
-                            execScript: R.curry(execScript)(login),
-                            evalScript: R.curry(evalScript)(login),
-                            glideAjax: R.curry(glideAjax)(login),
-                            xmlExport: R.curry(xmlExport)(login),
-                            xmlImport: R.curry(xmlImport)(login)
+                            "getLoginData": getLoginData,
+                            "script": {
+                                "eval": R.curry(evalScript)(login),
+                                "executeFn": R.curry(execScript)(login),
+                                "executeFnQuick": R.curry(execQuick)(login)
+                            },
+                            "application": {
+                                "getCurrentList": function () {
+                                    return __awaiter(this, void 0, void 0, function () {
+                                        return __generator(this, function (_a) {
+                                            return [2 /*return*/, getCurrentAppList(login)];
+                                        });
+                                    });
+                                },
+                                "switch": function (applicationSysId) {
+                                    return __awaiter(this, void 0, void 0, function () {
+                                        return __generator(this, function (_a) {
+                                            return [2 /*return*/, switchApp(login, applicationSysId)];
+                                        });
+                                    });
+                                }
+                            },
+                            "attachment": {
+                                "retrieve": R.curry(retrieveAttachment)(login),
+                                "delete": R.curry(deleteAttachment)(login),
+                                "upload": function (uploadType, table, sysId, input, fileName) { return __awaiter(_this, void 0, void 0, function () {
+                                    return __generator(this, function (_a) {
+                                        return [2 /*return*/, uploadAttachment(login, uploadType, table, sysId, input, fileName)];
+                                    });
+                                }); }
+                            },
+                            "glide": {
+                                "glideAjax": R.curry(glideAjax)(login)
+                            },
+                            "tableApi": {
+                                "retrieveRecord": function (table, sysId, options) {
+                                    return __awaiter(this, void 0, void 0, function () {
+                                        return __generator(this, function (_a) {
+                                            return [2 /*return*/, retrieveRecord(login, table, sysId, options)];
+                                        });
+                                    });
+                                },
+                                "retrieveRecords": function (table, options) {
+                                    return __awaiter(this, void 0, void 0, function () {
+                                        return __generator(this, function (_a) {
+                                            return [2 /*return*/, retrieveRecords(login, table, options)];
+                                        });
+                                    });
+                                },
+                                "streamRecordsToFile": R.curry(streamRecordsToFile)(login)
+                            },
+                            "util": {
+                                "xmlImport": R.curry(xmlImport)(login),
+                                "xmlExport": R.curry(xmlExport)(login),
+                                "xmlHttpRequest": R.curry(xmlHttp)(login),
+                                "getTableSchema": R.curry(getTableSchema)(login),
+                                "clearCache": function (invalidate) {
+                                    return __awaiter(this, void 0, void 0, function () {
+                                        return __generator(this, function (_a) {
+                                            return [2 /*return*/, clearCache(login, invalidate)];
+                                        });
+                                    });
+                                }
+                            },
+                            "updateSet": {
+                                "create": R.curry(createUpdateSet)(login),
+                                "getCurrentList": function () {
+                                    return __awaiter(this, void 0, void 0, function () {
+                                        return __generator(this, function (_a) {
+                                            return [2 /*return*/, getCurrentUpdateSetList(login)];
+                                        });
+                                    });
+                                },
+                                "exportToXml": R.curry(exportUpdateSetToXml)(login),
+                                "preview": R.curry(previewUpdateSet)(login),
+                                "switch": R.curry(switchUpdateSet)(login),
+                                "validate": R.curry(validateUpdateSet)(login),
+                                "commit": R.curry(commitUpdateSet)(login)
+                            }
                         }];
             }
         });

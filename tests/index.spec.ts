@@ -5,7 +5,7 @@ var pass = process.env.SN_PASS as string;
 
 test("Test exportXml function", async () => {
     let snclient = await snrequest(instance, user, { "password": pass });
-    let result = await snclient.xmlExport({
+    let result = await snclient.util.xmlExport({
         "table": "incident",
         "query": "active=true"
     })
@@ -16,7 +16,7 @@ test("Test exportXml function", async () => {
 test("Test importXml function", async () => {
     let filePath = "/Users/mak/Development/Node/servicenow/sn-request/tests/sys_script_include_c773513c870b0550b8210f6c8bbb35fc.xml"
     let snclient = await snrequest(instance, user, { "password": pass });
-    let response  = await snclient.xmlImport({
+    let response  = await snclient.util.xmlImport({
         "target": "sys_script_include",
         "filePath": filePath
     });
@@ -26,7 +26,7 @@ test("Test importXml function", async () => {
 
 test("Test execScript function", async () => {
     let snclient = await snrequest(instance, user, { "password": pass });
-    let execFn = await snclient.execScript("global", true, true);
+    let execFn = await snclient.script.executeFn("global", true, true);
     let execResult = await execFn(function(inputObj: any) {
         //@ts-ignore
         var testProp = gs.getProperty("sn_appclient.instance_type");
@@ -43,7 +43,7 @@ test("Test execScript function", async () => {
 
 test("Test evalScript function", async () => {
     let snclient = await snrequest(instance, user, { "password": pass });
-    let evalResult = await snclient.evalScript({
+    let evalResult = await snclient.script.eval({
         "script": "gs.print('$$TEST_PASSED$$')",
         "scope": "global",
         "rollback": true,
@@ -60,7 +60,7 @@ test("Test GlideAjax function", async () => {
     parms.set("sysparm_sys_id", "59af71769368501079f4dc2a767ffb36");
     parms.set("sysparm_field_name", "name");
     
-    let result = await snclient.glideAjax({
+    let result = await snclient.glide.glideAjax({
         "sysparm_processor": "RecordFieldGetter",
         "sysparm_name": "getValue",
         "sysparm_scope": "global",
