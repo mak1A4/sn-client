@@ -1,70 +1,168 @@
-import snrequest from "../src/index";
-var instance = process.env.SN_INSTANCE as string;
-var user = process.env.SN_USER as string;
-var pass = process.env.SN_PASS as string;
+import snrequest, { IRequestFunctions } from "../src/index";
+let instance = process.env.SN_INSTANCE as string;
+let user = process.env.SN_USER as string;
+let pass = process.env.SN_PASS as string;
 
-test("Test exportXml function", async () => {
-    let snclient = await snrequest(instance, user, { "password": pass });
-    let result = await snclient.util.xmlExport({
-        "table": "incident",
-        "query": "active=true"
-    })
-    console.log(result);
-    expect(true).toBe(true);
-});
+let _client: IRequestFunctions;
+async function getSnClient(): Promise<IRequestFunctions> {
+    if (!_client) _client = await snrequest(instance, user, { "password": pass });
+    return _client;
+}
 
-test("Test importXml function", async () => {
-    let filePath = "/Users/mak/Development/Node/servicenow/sn-request/tests/sys_script_include_c773513c870b0550b8210f6c8bbb35fc.xml"
-    let snclient = await snrequest(instance, user, { "password": pass });
-    let response  = await snclient.util.xmlImport({
-        "target": "sys_script_include",
-        "filePath": filePath
+describe("script module", () => {
+
+    test("executeFn function", async () => {
+        let snclient = await getSnClient();
+        let execFn = await snclient.script.executeFn("global", true, true);
+        let execResult = await execFn(function (inputObj: any) {
+            //@ts-ignore
+            var testProp = gs.getProperty("sn_appclient.instance_type");
+            return {
+                "input": inputObj.xyz,
+                "instance_type": testProp
+            };
+        }, { "xyz": "zyx" });
+        let foundScriptInput = execResult.result.input === "zyx";
+        let foundScriptResult = execResult.result.instance_type !== undefined;
+        expect(foundScriptResult).toBe(true);
+        expect(foundScriptInput).toBe(true);
     });
-    let success = response == 200;
-    expect(success).toBe(true);
-});
 
-test("Test execScript function", async () => {
-    let snclient = await snrequest(instance, user, { "password": pass });
-    let execFn = await snclient.script.executeFn("global", true, true);
-    let execResult = await execFn(function(inputObj: any) {
-        //@ts-ignore
-        var testProp = gs.getProperty("sn_appclient.instance_type");
-        return {
-            "input": inputObj.xyz,
-            "instance_type": testProp
-        };
-    }, { "xyz": "zyx" });
-    let foundScriptInput = execResult.result.input === "zyx";
-    let foundScriptResult = execResult.result.instance_type !== undefined;
-    expect(foundScriptResult).toBe(true);
-    expect(foundScriptInput).toBe(true);
-});
-
-test("Test evalScript function", async () => {
-    let snclient = await snrequest(instance, user, { "password": pass });
-    let evalResult = await snclient.script.eval({
-        "script": "gs.print('$$TEST_PASSED$$')",
-        "scope": "global",
-        "rollback": true,
-        "timeout": true
+    test("executeFnQuick function", async () => {
+        let snclient = await getSnClient();
+        let execFn = await snclient.script.executeFnQuick("global", true, true);
+        let execResult = await execFn(function (inputObj: any) {
+            //@ts-ignore
+            var testProp = gs.getProperty("sn_appclient.instance_type");
+            return {
+                "input": inputObj.xyz,
+                "instance_type": testProp
+            };
+        }, { "xyz": "zyx" });
+        let foundScriptInput = execResult.result.input === "zyx";
+        let foundScriptResult = execResult.result.instance_type !== undefined;
+        expect(foundScriptResult).toBe(true);
+        expect(foundScriptInput).toBe(true);
     });
-    let foundScriptResponse = evalResult.response.indexOf("$$TEST_PASSED$$") >= 0;
-    expect(foundScriptResponse).toBe(true);
+
+    test("eval function", async () => {
+        let snclient = await getSnClient();
+        let evalResult = await snclient.script.eval({
+            "script": "gs.print('$$TEST_PASSED$$')",
+            "scope": "global",
+            "rollback": true,
+            "timeout": true
+        });
+        let foundScriptResponse = evalResult.response.indexOf("$$TEST_PASSED$$") >= 0;
+        expect(foundScriptResponse).toBe(true);
+    });
 });
 
-test("Test GlideAjax function", async () => {
-    let snclient = await snrequest(instance, user, { "password": pass });
-    var parms = new Map<string, string>();
-    parms.set("sysparm_table", "sys_script_include");
-    parms.set("sysparm_sys_id", "59af71769368501079f4dc2a767ffb36");
-    parms.set("sysparm_field_name", "name");
-    
-    let result = await snclient.glide.glideAjax({
-        "sysparm_processor": "RecordFieldGetter",
-        "sysparm_name": "getValue",
-        "sysparm_scope": "global",
-        "sysparm_xyz": parms
+describe("application module", () => {
+    test("getCurrentList function", async () => {
+        let snclient = await getSnClient();
+        let result = await snclient.application.getCurrentList();
+
+        let applicationsFound = result.list && result.list.length > 0;
+        expect(applicationsFound).toBe(true);
+        //expect(foundScriptInput).toBe(true);
     });
-    expect(result).toBe("RecordFieldGetter");
+
+    test("switch function", async () => {
+
+        let snclient = await getSnClient();
+        await snclient.application.switch("global");
+        let gresult = await snclient.application.getCurrentList();
+        let firstSwitchWorked = gresult.current == "global";
+
+        await snclient.application.switch("ecc30875db950110ecec1a4813961929");
+
+        let result = await snclient.application.getCurrentList();
+        let secondSwitchWorked = result.current == "ecc30875db950110ecec1a4813961929";
+
+        expect(firstSwitchWorked).toBe(true);
+        expect(secondSwitchWorked).toBe(true);
+    });
+});
+
+describe("glide module", () => {
+    test("glideAjax function", async () => {
+        let snclient = await getSnClient();
+        var parms = new Map<string, string>();
+        parms.set("sysparm_table", "sys_script_include");
+        parms.set("sysparm_sys_id", "59af71769368501079f4dc2a767ffb36");
+        parms.set("sysparm_field_name", "name");
+
+        let result = await snclient.glide.glideAjax({
+            "sysparm_processor": "RecordFieldGetter",
+            "sysparm_name": "getValue",
+            "sysparm_scope": "global",
+            "sysparm_xyz": parms
+        });
+        expect(result).toBe("RecordFieldGetter");
+    });
+});
+
+describe("util module", () => {
+    test("xmlExport function", async () => {
+        let snclient = await getSnClient();
+        let result = await snclient.util.xmlExport({
+            "table": "incident",
+            "query": "number=INC0010001"
+        })
+        let resultXmlFound = result !== "";
+        expect(resultXmlFound).toBe(true);
+    });
+    test("xmlImport function", async () => {
+        let filePath = "/Users/mak/Development/Node/servicenow/sn-request/tests/sys_script_include_c773513c870b0550b8210f6c8bbb35fc.xml"
+        let snclient = await getSnClient();
+        let response = await snclient.util.xmlImport({
+            "target": "sys_script_include",
+            "filePath": filePath
+        });
+        let success = response == 200;
+        expect(success).toBe(true);
+    });
+
+    test("xmlHttpRequest function", async () => {
+    });
+    test("getTableSchema function", async () => {
+    });
+    test("clearCache function", async () => {
+    });
+});
+
+describe("attachment module", () => {
+    test("upload function", async () => {
+    });
+    test("retrieve function", async () => {
+    });
+    test("delete function", async () => {
+    });
+});
+
+describe("table-api module", () => {
+    test("retrieveRecord function", async () => {
+    });
+    test("retrieveRecords function", async () => {
+    });
+    test("streamRecordsToFile function", async () => {
+    });
+});
+
+describe("update-set module", () => {
+    test("create function", async () => {
+    });
+    test("getCurrentList function", async () => {
+    });
+    test("exportToXml function", async () => {
+    });
+    test("preview function", async () => {
+    });
+    test("switch function", async () => {
+    });
+    test("validate function", async () => {
+    });
+    test("commit function", async () => {
+    });
 });
