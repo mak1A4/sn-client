@@ -1,10 +1,11 @@
+import * as fs from "fs";
+import * as path from "path";
 import { NowSession } from "sn-login";
 import evalScript from "./eval";
 import { randomUUID } from "crypto";
 import attachmentUpload, { UploadType } from "../attachment/upload";
 import attachmentRetrieve from "../attachment/retrieve";
 import attachmentDelete from "../attachment/delete";
-import * as fs from "fs";
 
 export interface IExecFnResponse {
     result: any,
@@ -25,16 +26,21 @@ export default async function (
         let inputAttachmentSysId = await attachmentUpload(
             session, UploadType.JsonString, "temp", fakeSysId, JSON.stringify(inputObject), fakeSysId + ".json");
 
-        let url = __dirname;
-        console.log(url);
-        let getInputObjFnStr = fs.readFileSync("./assets/getInputObj.js", "utf8");
-        let getOutputObjFnStr = fs.readFileSync("./assets/getOutputObj.js", "utf8");
+        let assetPath: string;
+        if (assetPath.indexOf("/cjs/") >= 0) {
+            assetPath = path.join(__dirname, "..", "..", "..", "assets");
+        } else {
+            assetPath = path.join(__dirname, "..", "..", "assets");
+        }
+
+        let getInputObjFnStr = fs.readFileSync(path.join(assetPath, "getInputObj.js"), "utf8");
+        let getOutputObjFnStr = fs.readFileSync(path.join(assetPath, "getOutputObj.js"), "utf8");
 
         let execScript =
             `var inputObj = (${getInputObjFnStr})('${inputAttachmentSysId}');
-       var result = (${snExecFn.toString()})(inputObj);
-       var outAttachmentSysId = (${getOutputObjFnStr})(result);
-       gs.debug("=####" + outAttachmentSysId + "####=")`;
+             var result = (${snExecFn.toString()})(inputObj);
+             var outAttachmentSysId = (${getOutputObjFnStr})(result);
+             gs.debug("=####" + outAttachmentSysId + "####=")`;
 
         let evalResult = await evalScript(session, {
             "script": execScript,

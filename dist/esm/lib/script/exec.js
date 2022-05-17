@@ -34,19 +34,20 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+import * as fs from "fs";
+import * as path from "path";
 import evalScript from "./eval";
 import { randomUUID } from "crypto";
 import attachmentUpload, { UploadType } from "../attachment/upload";
 import attachmentRetrieve from "../attachment/retrieve";
 import attachmentDelete from "../attachment/delete";
-import * as fs from "fs";
 export default function (session, scope, rollback, timeout) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             return [2 /*return*/, function (snExecFn, inputObject) {
                     if (inputObject === void 0) { inputObject = {}; }
                     return __awaiter(this, void 0, void 0, function () {
-                        var fakeSysId, inputAttachmentSysId, url, getInputObjFnStr, getOutputObjFnStr, execScript, evalResult, jsonResultMatch, resultAttachmentSysId, resultObjPath, resultObjStr, resultObj, buff;
+                        var fakeSysId, inputAttachmentSysId, assetPath, getInputObjFnStr, getOutputObjFnStr, execScript, evalResult, jsonResultMatch, resultAttachmentSysId, resultObjPath, resultObjStr, resultObj, buff;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
@@ -54,11 +55,15 @@ export default function (session, scope, rollback, timeout) {
                                     return [4 /*yield*/, attachmentUpload(session, UploadType.JsonString, "temp", fakeSysId, JSON.stringify(inputObject), fakeSysId + ".json")];
                                 case 1:
                                     inputAttachmentSysId = _a.sent();
-                                    url = __dirname;
-                                    console.log(url);
-                                    getInputObjFnStr = fs.readFileSync("./assets/getInputObj.js", "utf8");
-                                    getOutputObjFnStr = fs.readFileSync("./assets/getOutputObj.js", "utf8");
-                                    execScript = "var inputObj = (".concat(getInputObjFnStr, ")('").concat(inputAttachmentSysId, "');\n       var result = (").concat(snExecFn.toString(), ")(inputObj);\n       var outAttachmentSysId = (").concat(getOutputObjFnStr, ")(result);\n       gs.debug(\"=####\" + outAttachmentSysId + \"####=\")");
+                                    if (assetPath.indexOf("/cjs/") >= 0) {
+                                        assetPath = path.join(__dirname, "..", "..", "..", "assets");
+                                    }
+                                    else {
+                                        assetPath = path.join(__dirname, "..", "..", "assets");
+                                    }
+                                    getInputObjFnStr = fs.readFileSync(path.join(assetPath, "getInputObj.js"), "utf8");
+                                    getOutputObjFnStr = fs.readFileSync(path.join(assetPath, "getOutputObj.js"), "utf8");
+                                    execScript = "var inputObj = (".concat(getInputObjFnStr, ")('").concat(inputAttachmentSysId, "');\n             var result = (").concat(snExecFn.toString(), ")(inputObj);\n             var outAttachmentSysId = (").concat(getOutputObjFnStr, ")(result);\n             gs.debug(\"=####\" + outAttachmentSysId + \"####=\")");
                                     return [4 /*yield*/, evalScript(session, {
                                             "script": execScript,
                                             "scope": scope,
