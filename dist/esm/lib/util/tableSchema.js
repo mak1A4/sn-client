@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 import { XMLParser } from "fast-xml-parser";
 export default function (session, tableName) {
     return __awaiter(this, void 0, void 0, function () {
-        var response;
+        var response, elementList;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, session.httpClient.get("/".concat(tableName, ".do?SCHEMA"), {
@@ -49,10 +49,11 @@ export default function (session, tableName) {
                     })];
                 case 1:
                     response = _a.sent();
-                    return [2 /*return*/, new XMLParser({
-                            ignoreAttributes: false,
-                            attributeNamePrefix: "@_"
-                        }).parse(response.data)];
+                    elementList = new XMLParser({
+                        ignoreAttributes: false,
+                        attributeNamePrefix: ""
+                    }).parse(response.data)[tableName]["element"];
+                    return [2 /*return*/, elementList];
             }
         });
     });

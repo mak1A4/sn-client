@@ -1,7 +1,7 @@
 import { NowSession } from "sn-login";
 
-export default function (session: NowSession): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
+export default function (session: NowSession): Promise<string> {
+  return new Promise<string>((resolve, reject) => {
     session.httpClient.get("/cancel_my_transaction.do?status=true&sysparm_output=json", {
       "headers": {
         "X-UserToken": session.userToken,

@@ -23,7 +23,7 @@ var pass = process.env.SN_PASS as string;
 
   var sw = new StopWatch();
   let $sn = await snrequest(instance, user);
-  let login = $sn.getLoginData();
+  let login = $sn.getNowSession();
 
   sw.start("request");
   // let res = await retrieveRecords(login, "incident", {

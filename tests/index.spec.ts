@@ -1,11 +1,12 @@
 import snrequest, { IRequestFunctions } from "../src/index";
+import keepAlive from "../src/lib/util/keepAlive";
 let instance = process.env.SN_INSTANCE as string;
 let user = process.env.SN_USER as string;
 let pass = process.env.SN_PASS as string;
 
 let _client: IRequestFunctions;
 async function getSnClient(): Promise<IRequestFunctions> {
-    if (!_client) _client = await snrequest(instance, user, { "password": pass });
+    if (!_client) _client = await snrequest(instance, user, pass);
     return _client;
 }
 
@@ -104,6 +105,13 @@ describe("glide module", () => {
 });
 
 describe("util module", () => {
+
+    test("clearCache function", async () => {
+        let snclient = await getSnClient();
+        let result = await snclient.util.clearCache(true);
+        let cacheCleared = result.indexOf("Servlet Memory") >= 0;
+        expect(cacheCleared).toBe(true);
+    });
     test("xmlExport function", async () => {
         let snclient = await getSnClient();
         let result = await snclient.util.xmlExport({
@@ -123,12 +131,31 @@ describe("util module", () => {
         let success = response == 200;
         expect(success).toBe(true);
     });
-
-    test("xmlHttpRequest function", async () => {
+    test("keepAlive function", async () => {
+        let snclient = await getSnClient();
+        let response = await keepAlive(snclient.getNowSession());
+        let success = response === "complete";
+        expect(success).toBe(true);
     });
     test("getTableSchema function", async () => {
+        let snclient = await getSnClient();
+        let incidentTableSchema = await snclient.util.getTableSchema("incident");
+        let success = incidentTableSchema && incidentTableSchema.length > 0;
+        expect(success).toBe(true);
     });
-    test("clearCache function", async () => {
+    test("xmlHttpRequest function", async () => {
+        let snclient = await getSnClient();
+        
+        var parms = new Map<string, string>();
+        parms.set("sysparm_name", "createCleanName");
+        parms.set("sysparm_label", "TestSuccessful");
+        parms.set("sysparm_scope", "global");
+        
+        let result = await snclient.util.xmlHttpRequest({
+            "sysparm_processor": "CleanTemplateInputName",
+            "sysparm_xyz": parms
+        });
+        expect(result).toBe("testsuccessful");
     });
 });
 
