@@ -27,8 +27,8 @@ export default async function (
 
         let url = __dirname;
         console.log(url);
-        let getInputObjFnStr = fs.readFileSync("./asset/getInputObj.js", "utf8");
-        let getOutputObjFnStr = fs.readFileSync("./asset/getOutputObj.js", "utf8");
+        let getInputObjFnStr = fs.readFileSync("./assets/getInputObj.js", "utf8");
+        let getOutputObjFnStr = fs.readFileSync("./assets/getOutputObj.js", "utf8");
 
         let execScript =
             `var inputObj = (${getInputObjFnStr})('${inputAttachmentSysId}');
