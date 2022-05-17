@@ -55,7 +55,7 @@ export default function (session, scope, rollback, timeout) {
                                     return [4 /*yield*/, attachmentUpload(session, UploadType.JsonString, "temp", fakeSysId, JSON.stringify(inputObject), fakeSysId + ".json")];
                                 case 1:
                                     inputAttachmentSysId = _a.sent();
-                                    if (assetPath.indexOf("/cjs/") >= 0) {
+                                    if (__dirname.indexOf("/cjs/") >= 0) {
                                         assetPath = path.join(__dirname, "..", "..", "..", "assets");
                                     }
                                     else {

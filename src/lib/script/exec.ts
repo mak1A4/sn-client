@@ -27,7 +27,7 @@ export default async function (
             session, UploadType.JsonString, "temp", fakeSysId, JSON.stringify(inputObject), fakeSysId + ".json");
 
         let assetPath: string;
-        if (assetPath.indexOf("/cjs/") >= 0) {
+        if (__dirname.indexOf("/cjs/") >= 0) {
             assetPath = path.join(__dirname, "..", "..", "..", "assets");
         } else {
             assetPath = path.join(__dirname, "..", "..", "assets");
