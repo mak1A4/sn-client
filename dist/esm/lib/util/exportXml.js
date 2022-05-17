@@ -34,16 +34,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-export default function (login, input) {
+export default function (session, input) {
     return __awaiter(this, void 0, void 0, function () {
         var url, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     url = "/".concat(input.table, ".do?UNL&sysparm_query=").concat(input.query);
-                    return [4 /*yield*/, login.wclient.get(url, {
+                    return [4 /*yield*/, session.httpClient.get(url, {
                             headers: {
-                                "X-UserToken": login.token,
+                                "X-UserToken": session.userToken,
                                 "Connection": "keep-alive",
                                 "Cache-Control": "max-age=0",
                             }

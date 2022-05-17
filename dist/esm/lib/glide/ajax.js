@@ -35,14 +35,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import xmlHttp from "../util/xmlHttp";
-export default function (login, data) {
+export default function (session, data) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     data.sysparm_xyz.set("sysparm_name", data.sysparm_name);
                     data.sysparm_xyz.set("sysparm_scope", data.sysparm_scope);
-                    return [4 /*yield*/, xmlHttp(login, {
+                    return [4 /*yield*/, xmlHttp(session, {
                             "sysparm_processor": data.sysparm_processor,
                             "sysparm_xyz": data.sysparm_xyz
                         })];

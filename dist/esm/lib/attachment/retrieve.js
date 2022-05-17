@@ -40,7 +40,7 @@ import * as fs from "fs";
 import * as stream from "stream";
 import * as util from "util";
 import keepAlive from "../util/keepAlive";
-export default function (login, attachmentSysId, outPath, encoding) {
+export default function (session, attachmentSysId, outPath, encoding) {
     return __awaiter(this, void 0, void 0, function () {
         var writer, finished, url, keepAliveInterval, keepAliveTimeout;
         return __generator(this, function (_a) {
@@ -51,15 +51,15 @@ export default function (login, attachmentSysId, outPath, encoding) {
             url = "/sys_attachment.do?sys_id=".concat(attachmentSysId);
             keepAliveTimeout = setTimeout(function () {
                 keepAliveInterval = setInterval(function () {
-                    keepAlive(login);
+                    keepAlive(session);
                 }, 1000);
             }, 15000);
             return [2 /*return*/, new Promise(function (resolve, reject) {
-                    login.wclient.get(url, {
+                    session.httpClient.get(url, {
                         headers: {
                             "Accept": "*/*",
                             "Connection": "keep-alive",
-                            "X-UserToken": login.token
+                            "X-UserToken": session.userToken
                         },
                         responseType: "stream"
                     }).then(function (response) {

@@ -62,7 +62,7 @@ var __read = (this && this.__read) || function (o, n) {
     return ar;
 };
 import { XMLParser } from "fast-xml-parser";
-export default function (login, options) {
+export default function (session, options) {
     return __awaiter(this, void 0, void 0, function () {
         var postBodyObj, _a, _b, _c, key, value, postFormData, response, parser, xmlResponse, jsonResponse;
         var e_1, _d;
@@ -86,9 +86,9 @@ export default function (login, options) {
                         finally { if (e_1) throw e_1.error; }
                     }
                     postFormData = new URLSearchParams(postBodyObj).toString();
-                    return [4 /*yield*/, login.wclient.post("/xmlhttp.do", postFormData, {
+                    return [4 /*yield*/, session.httpClient.post("/xmlhttp.do", postFormData, {
                             "headers": {
-                                "X-UserToken": login.token
+                                "X-UserToken": session.userToken
                             }
                         })];
                 case 1:

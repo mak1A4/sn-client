@@ -41,14 +41,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var execQuick_1 = __importDefault(require("../script/execQuick"));
 var h2p = require("html2plaintext");
-function clearCache(login, invalidate) {
+function clearCache(session, invalidate) {
     return __awaiter(this, void 0, void 0, function () {
         var response, bodyStr, execFn;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, login.wclient.get("/cache.do", {
+                case 0: return [4 /*yield*/, session.httpClient.get("/cache.do", {
                         "headers": {
-                            "X-UserToken": login.token,
+                            "X-UserToken": session.userToken,
                             "Connection": "keep-alive"
                         }
                     })];
@@ -59,7 +59,7 @@ function clearCache(login, invalidate) {
                     bodyStr = h2p(bodyStr);
                     bodyStr = bodyStr.substring(bodyStr.indexOf("\n") + 1);
                     if (!(invalidate === true)) return [3 /*break*/, 4];
-                    return [4 /*yield*/, (0, execQuick_1.default)(login, "global", false, true)];
+                    return [4 /*yield*/, (0, execQuick_1.default)(session, "global", false, true)];
                 case 2:
                     execFn = _a.sent();
                     return [4 /*yield*/, execFn(function () {

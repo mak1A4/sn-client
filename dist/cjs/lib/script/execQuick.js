@@ -40,7 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var eval_1 = __importDefault(require("./eval"));
-function default_1(login, scope, rollback, timeout) {
+function default_1(session, scope, rollback, timeout) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             return [2 /*return*/, function (execFn, inputObject) {
@@ -51,7 +51,7 @@ function default_1(login, scope, rollback, timeout) {
                             switch (_a.label) {
                                 case 0:
                                     execScript = "var inputObj = JSON.parse('".concat(JSON.stringify(inputObject), "');\n       var result = (").concat(execFn.toString(), ")(inputObj);\n       if (!result) result = {};\n       gs.debug(\"=####\" + JSON.stringify(result) + \"####=\")");
-                                    return [4 /*yield*/, (0, eval_1.default)(login, {
+                                    return [4 /*yield*/, (0, eval_1.default)(session, {
                                             "script": execScript,
                                             "scope": scope,
                                             "rollback": rollback,

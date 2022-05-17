@@ -36,16 +36,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-function default_1(login) {
+function default_1(session) {
     return __awaiter(this, void 0, void 0, function () {
         var url, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     url = "/api/now/ui/concoursepicker/updateset";
-                    return [4 /*yield*/, login.wclient.get(url, {
+                    return [4 /*yield*/, session.httpClient.get(url, {
                             headers: {
-                                "X-UserToken": login.token,
+                                "X-UserToken": session.userToken,
                                 "Connection": "keep-alive",
                                 "Accept": "application/json"
                             }

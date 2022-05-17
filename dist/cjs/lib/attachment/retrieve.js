@@ -68,7 +68,7 @@ var fs = __importStar(require("fs"));
 var stream = __importStar(require("stream"));
 var util = __importStar(require("util"));
 var keepAlive_1 = __importDefault(require("../util/keepAlive"));
-function default_1(login, attachmentSysId, outPath, encoding) {
+function default_1(session, attachmentSysId, outPath, encoding) {
     return __awaiter(this, void 0, void 0, function () {
         var writer, finished, url, keepAliveInterval, keepAliveTimeout;
         return __generator(this, function (_a) {
@@ -79,15 +79,15 @@ function default_1(login, attachmentSysId, outPath, encoding) {
             url = "/sys_attachment.do?sys_id=".concat(attachmentSysId);
             keepAliveTimeout = setTimeout(function () {
                 keepAliveInterval = setInterval(function () {
-                    (0, keepAlive_1.default)(login);
+                    (0, keepAlive_1.default)(session);
                 }, 1000);
             }, 15000);
             return [2 /*return*/, new Promise(function (resolve, reject) {
-                    login.wclient.get(url, {
+                    session.httpClient.get(url, {
                         headers: {
                             "Accept": "*/*",
                             "Connection": "keep-alive",
-                            "X-UserToken": login.token
+                            "X-UserToken": session.userToken
                         },
                         responseType: "stream"
                     }).then(function (response) {

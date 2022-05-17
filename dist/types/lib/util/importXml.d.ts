@@ -1,6 +1,6 @@
-import { LoginData } from "sn-login";
+import { NowSession } from "sn-login";
 export interface IXmlImportInput {
     target: string;
     filePath: string;
 }
-export default function (login: LoginData, input: IXmlImportInput): Promise<number>;
+export default function (session: NowSession, input: IXmlImportInput): Promise<number>;

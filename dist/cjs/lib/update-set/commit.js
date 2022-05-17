@@ -40,7 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var ajax_1 = __importDefault(require("../glide/ajax"));
-function default_1(login, remoteUpdateSetSysId, scope) {
+function default_1(session, remoteUpdateSetSysId, scope) {
     return __awaiter(this, void 0, void 0, function () {
         var parms, ajaxOptions;
         return __generator(this, function (_a) {
@@ -54,7 +54,7 @@ function default_1(login, remoteUpdateSetSysId, scope) {
                         "sysparm_scope": scope,
                         "sysparm_xyz": parms
                     };
-                    return [4 /*yield*/, (0, ajax_1.default)(login, ajaxOptions)];
+                    return [4 /*yield*/, (0, ajax_1.default)(session, ajaxOptions)];
                 case 1: return [2 /*return*/, _a.sent()];
             }
         });

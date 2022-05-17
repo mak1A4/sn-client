@@ -1,4 +1,4 @@
-import { LoginData } from "sn-login";
+import { NowSession } from "sn-login";
 import execQuick from "../script/execQuick";
 
 export interface IUpdateSetExportResult {
@@ -7,11 +7,11 @@ export interface IUpdateSetExportResult {
 }
 
 export default async function (
-  login: LoginData, updateSetSysId: string, scope: string
+  session: NowSession, updateSetSysId: string, scope: string
 ): Promise<IUpdateSetExportResult> {
 
   let exportSysId = await (async function () {
-    let qex = await execQuick(login, scope, false, true);
+    let qex = await execQuick(session, scope, false, true);
     let resultObj = await qex(function (inputObj) {
       //@ts-ignore
       var grUpdateSet = new GlideRecord("sys_update_set");
@@ -30,10 +30,10 @@ export default async function (
     "sysparm_sys_id": exportSysId,
     "sysparm_delete_when_done": "true"
   };
-  let response = await login.wclient.get(url, {
+  let response = await session.httpClient.get(url, {
     params: urlParms,
     headers: {
-      "X-UserToken": login.token,
+      "X-UserToken": session.userToken,
       "Connection": "keep-alive"
     }
   });

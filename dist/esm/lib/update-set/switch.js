@@ -34,7 +34,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-export default function (login, updateSetSysId) {
+export default function (session, updateSetSysId) {
     return __awaiter(this, void 0, void 0, function () {
         var url, requestBody, response;
         return __generator(this, function (_a) {
@@ -42,9 +42,9 @@ export default function (login, updateSetSysId) {
                 case 0:
                     url = "/api/now/ui/concoursepicker/updateset";
                     requestBody = { "sysId": updateSetSysId };
-                    return [4 /*yield*/, login.wclient.put(url, requestBody, {
+                    return [4 /*yield*/, session.httpClient.put(url, requestBody, {
                             headers: {
-                                "X-UserToken": login.token,
+                                "X-UserToken": session.userToken,
                                 "Connection": "keep-alive",
                                 "Content-Type": "application/json",
                                 "Accept": "application/json",

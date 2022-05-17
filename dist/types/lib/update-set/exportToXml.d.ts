@@ -1,6 +1,6 @@
-import { LoginData } from "sn-login";
+import { NowSession } from "sn-login";
 export interface IUpdateSetExportResult {
     fileName: string;
     exportXml: string;
 }
-export default function (login: LoginData, updateSetSysId: string, scope: string): Promise<IUpdateSetExportResult>;
+export default function (session: NowSession, updateSetSysId: string, scope: string): Promise<IUpdateSetExportResult>;

@@ -1,4 +1,4 @@
-import { LoginData } from "sn-login";
+import { NowSession } from "sn-login";
 export interface IRetrieveRecordOptions {
     withDisplayValue?: boolean;
     fields?: string;
@@ -13,6 +13,6 @@ export interface IRetrieveRecordsToFileOptions extends IRetrieveRecordOptions {
     filePath?: string;
     chunkSize?: number;
 }
-export declare function retrieveRecord(login: LoginData, table: string, sysId: string, options?: IRetrieveRecordOptions): Promise<any>;
-export declare function retrieveRecords(login: LoginData, table: string, options?: IRetrieveRecordsOptions): Promise<any[]>;
-export declare function streamRecordsToFile(login: LoginData, table: string, options: IRetrieveRecordsToFileOptions): Promise<string>;
+export declare function retrieveRecord(session: NowSession, table: string, sysId: string, options?: IRetrieveRecordOptions): Promise<any>;
+export declare function retrieveRecords(session: NowSession, table: string, options?: IRetrieveRecordsOptions): Promise<any[]>;
+export declare function streamRecordsToFile(session: NowSession, table: string, options: IRetrieveRecordsToFileOptions): Promise<string>;

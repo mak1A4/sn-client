@@ -90,7 +90,7 @@ exports.streamRecordsToFile = exports.retrieveRecords = exports.retrieveRecord =
 var fs = __importStar(require("fs"));
 var os_1 = require("os");
 var path_1 = require("path");
-function retrieveRecord(login, table, sysId, options) {
+function retrieveRecord(session, table, sysId, options) {
     return __awaiter(this, void 0, void 0, function () {
         var urlParmObj, url, response;
         return __generator(this, function (_a) {
@@ -104,9 +104,9 @@ function retrieveRecord(login, table, sysId, options) {
                             urlParmObj.sysparm_display_value = "all";
                     }
                     url = "/api/now/table/".concat(table, "/").concat(sysId);
-                    return [4 /*yield*/, login.wclient.get(url, {
+                    return [4 /*yield*/, session.httpClient.get(url, {
                             headers: {
-                                "X-UserToken": login.token,
+                                "X-UserToken": session.userToken,
                                 "Accept": "application/json"
                             },
                             params: urlParmObj
@@ -121,7 +121,7 @@ function retrieveRecord(login, table, sysId, options) {
 exports.retrieveRecord = retrieveRecord;
 // If you use the Table API, and have glide.invalid_query.returns_no_rows set to true.
 // Rather than getting 0 results you'll get a 403 forbidden message if an invalid query is used
-function retrieveRecords(login, table, options) {
+function retrieveRecords(session, table, options) {
     return __awaiter(this, void 0, void 0, function () {
         var urlParmObj, response;
         return __generator(this, function (_a) {
@@ -140,9 +140,9 @@ function retrieveRecords(login, table, options) {
                         if (options.withDisplayValue)
                             urlParmObj.sysparm_display_value = "all";
                     }
-                    return [4 /*yield*/, login.wclient.get("/api/now/table/".concat(table), {
+                    return [4 /*yield*/, session.httpClient.get("/api/now/table/".concat(table), {
                             headers: {
-                                "X-UserToken": login.token,
+                                "X-UserToken": session.userToken,
                                 "Accept": "application/json"
                             },
                             params: urlParmObj
@@ -155,7 +155,7 @@ function retrieveRecords(login, table, options) {
     });
 }
 exports.retrieveRecords = retrieveRecords;
-function streamRecordsToFile(login, table, options) {
+function streamRecordsToFile(session, table, options) {
     return __awaiter(this, void 0, void 0, function () {
         var writePath, encodedQueryWithOrderBy, chunkSize, recursiveOptions, writeStream;
         return __generator(this, function (_a) {
@@ -193,7 +193,7 @@ function streamRecordsToFile(login, table, options) {
                                     switch (_e.label) {
                                         case 0:
                                             recursiveOptions.offset = offset;
-                                            return [4 /*yield*/, retrieveRecords(login, table, recursiveOptions)];
+                                            return [4 /*yield*/, retrieveRecords(session, table, recursiveOptions)];
                                         case 1:
                                             response = _e.sent();
                                             try {

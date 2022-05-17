@@ -40,11 +40,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var post_1 = __importDefault(require("../table-api/post"));
-function default_1(login, name, scope) {
+function default_1(session, name, scope) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, (0, post_1.default)(login, "sys_update_set", {
+                case 0: return [4 /*yield*/, (0, post_1.default)(session, "sys_update_set", {
                         "name": name
                     })];
                 case 1: 

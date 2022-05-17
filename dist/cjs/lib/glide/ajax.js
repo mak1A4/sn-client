@@ -40,14 +40,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var xmlHttp_1 = __importDefault(require("../util/xmlHttp"));
-function default_1(login, data) {
+function default_1(session, data) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     data.sysparm_xyz.set("sysparm_name", data.sysparm_name);
                     data.sysparm_xyz.set("sysparm_scope", data.sysparm_scope);
-                    return [4 /*yield*/, (0, xmlHttp_1.default)(login, {
+                    return [4 /*yield*/, (0, xmlHttp_1.default)(session, {
                             "sysparm_processor": data.sysparm_processor,
                             "sysparm_xyz": data.sysparm_xyz
                         })];

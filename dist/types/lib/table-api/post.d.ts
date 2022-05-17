@@ -1,6 +1,6 @@
-import { LoginData } from "sn-login";
+import { NowSession } from "sn-login";
 export interface ICreateRecordOptions {
     withDisplayValue?: boolean;
     fields?: string;
 }
-export default function createRecord(login: LoginData, table: string, data: any, options?: ICreateRecordOptions): Promise<any>;
+export default function createRecord(session: NowSession, table: string, data: any, options?: ICreateRecordOptions): Promise<any>;

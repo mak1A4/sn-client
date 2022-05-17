@@ -34,16 +34,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-export default function deleteRecord(login, table, sysId) {
+export default function deleteRecord(session, table, sysId) {
     return __awaiter(this, void 0, void 0, function () {
         var url, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     url = "/api/now/table/".concat(table, "/").concat(sysId);
-                    return [4 /*yield*/, login.wclient.delete(url, {
+                    return [4 /*yield*/, session.httpClient.delete(url, {
                             headers: {
-                                "X-UserToken": login.token,
+                                "X-UserToken": session.userToken,
                                 "Accept": "application/json"
                             }
                         })];

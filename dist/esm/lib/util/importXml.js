@@ -37,9 +37,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 import * as fs from "fs";
 import * as path from "path";
 import request from "request";
-export default function (login, input) {
+export default function (session, input) {
     return __awaiter(this, void 0, void 0, function () {
-        var defaultHeader, baseURL, xjar, filename;
+        var defaultHeader, baseURL, xjar, sessionJar, filename;
         return __generator(this, function (_a) {
             defaultHeader = {
                 "Accept": "*/*",
@@ -50,23 +50,24 @@ export default function (login, input) {
                 "Accept-Language": "en-US,en;q=0.8",
                 "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
             };
-            baseURL = login.wclient.defaults.baseURL;
+            baseURL = session.httpClient.defaults.baseURL;
             xjar = request.jar();
-            if (login.cookieJar) {
-                login.cookieJar.getCookiesSync(baseURL).forEach(function (c) {
+            sessionJar = session.getCookieJar();
+            if (sessionJar) {
+                sessionJar.getCookiesSync(baseURL).forEach(function (c) {
                     xjar.setCookie(c.cookieString(), baseURL);
                 });
             }
             filename = path.basename(input.filePath);
             return [2 /*return*/, new Promise(function (resolve, reject) {
-                    request(login.wclient.defaults.baseURL + "/sys_upload.do", {
+                    request(session.httpClient.defaults.baseURL + "/sys_upload.do", {
                         "method": "POST",
                         "headers": defaultHeader,
                         "followAllRedirects": true,
                         "gzip": true,
                         "jar": xjar,
                         "formData": {
-                            "sysparm_ck": login.token,
+                            "sysparm_ck": session.userToken,
                             "sysparm_target": input.target,
                             "file": {
                                 "value": fs.createReadStream(input.filePath),

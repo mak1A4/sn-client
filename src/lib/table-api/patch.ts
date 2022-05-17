@@ -1,4 +1,4 @@
-import { LoginData } from "sn-login";
+import { NowSession } from "sn-login";
 
 export interface IUpdateRecordOptions {
   withDisplayValue?: boolean
@@ -6,17 +6,17 @@ export interface IUpdateRecordOptions {
 }
 
 export default async function updateRecord(
-  login: LoginData, table: string, data: any, options?: IUpdateRecordOptions
+  session: NowSession, table: string, sysId: string, data: any, options?: IUpdateRecordOptions
 ): Promise<any> {
-  let url = `/api/now/table/${table}`;
+  let url = `/api/now/table/${table}/${sysId}`;
   let urlParmObj: any = {};
   if (options) {
     if (options.fields) urlParmObj.sysparm_fields = options.fields;
     if (options.withDisplayValue) urlParmObj.sysparm_display_value = "all";
   }
-  var response = await login.wclient.patch(url, data, {
+  var response = await session.httpClient.patch(url, data, {
     headers: {
-      "X-UserToken": login.token,
+      "X-UserToken": session.userToken,
       "Accept": "application/json"
     },
     "params": urlParmObj

@@ -1,2 +1,2 @@
-import { LoginData } from "sn-login";
-export default function (login: LoginData, applicationSysId: string): Promise<any>;
+import { NowSession } from "sn-login";
+export default function (session: NowSession, applicationSysId: string): Promise<any>;

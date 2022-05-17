@@ -1,13 +1,13 @@
-import { LoginData } from "sn-login";
+import { NowSession } from "sn-login";
 
 export default async function deleteRecord(
-  login: LoginData, table: string, sysId: string
+  session: NowSession, table: string, sysId: string
 ): Promise<any> {
   let url = `/api/now/table/${table}/${sysId}`;
   
-  var response = await login.wclient.delete(url, {
+  var response = await session.httpClient.delete(url, {
     headers: {
-      "X-UserToken": login.token,
+      "X-UserToken": session.userToken,
       "Accept": "application/json"
     }
   });

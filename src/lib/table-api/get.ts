@@ -1,4 +1,4 @@
-import { LoginData } from "sn-login";
+import { NowSession } from "sn-login";
 import * as fs from "fs";
 import { tmpdir } from "os";
 import { join } from "path";
@@ -21,7 +21,7 @@ export interface IRetrieveRecordsToFileOptions extends IRetrieveRecordOptions {
 }
 
 export async function retrieveRecord(
-  login: LoginData, table: string, sysId: string, options?: IRetrieveRecordOptions
+  session: NowSession, table: string, sysId: string, options?: IRetrieveRecordOptions
 ): Promise<any> {
   let urlParmObj: any = {};
   if (options) {
@@ -30,9 +30,9 @@ export async function retrieveRecord(
   }
 
   let url = `/api/now/table/${table}/${sysId}`;
-  var response = await login.wclient.get(url, {
+  var response = await session.httpClient.get(url, {
     headers: {
-      "X-UserToken": login.token,
+      "X-UserToken": session.userToken,
       "Accept": "application/json"
     },
     params: urlParmObj
@@ -43,7 +43,7 @@ export async function retrieveRecord(
 // If you use the Table API, and have glide.invalid_query.returns_no_rows set to true.
 // Rather than getting 0 results you'll get a 403 forbidden message if an invalid query is used
 export async function retrieveRecords(
-  login: LoginData, table: string, options?: IRetrieveRecordsOptions
+  session: NowSession, table: string, options?: IRetrieveRecordsOptions
 ): Promise<any[]> {
   let urlParmObj: any = {};
   if (options) {
@@ -54,9 +54,9 @@ export async function retrieveRecords(
     if (options.withDisplayValue) urlParmObj.sysparm_display_value = "all";
   }
 
-  var response = await login.wclient.get(`/api/now/table/${table}`, {
+  var response = await session.httpClient.get(`/api/now/table/${table}`, {
     headers: {
-      "X-UserToken": login.token,
+      "X-UserToken": session.userToken,
       "Accept": "application/json"
     },
     params: urlParmObj
@@ -65,7 +65,7 @@ export async function retrieveRecords(
 }
 
 export async function streamRecordsToFile(
-  login: LoginData, table: string, options: IRetrieveRecordsToFileOptions
+  session: NowSession, table: string, options: IRetrieveRecordsToFileOptions
 ): Promise<string> {
   if (!options) options = {};
   let writePath = options.filePath;
@@ -89,7 +89,7 @@ export async function streamRecordsToFile(
     writeStream.write("[");
     await (async function recursiveCall(offset: number) {
       recursiveOptions.offset = offset;
-      let response = await retrieveRecords(login, table, recursiveOptions);
+      let response = await retrieveRecords(session, table, recursiveOptions);
       for (let [idx, recObj] of response.entries()) {
         let jsonObjStr = JSON.stringify(recObj);
         if (offset === 0 && idx === 0) writeStream.write(jsonObjStr);

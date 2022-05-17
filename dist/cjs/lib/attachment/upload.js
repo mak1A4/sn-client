@@ -71,7 +71,7 @@ var UploadType;
     UploadType["XmlString"] = "xml_str";
     UploadType["PlainText"] = "plain_text";
 })(UploadType = exports.UploadType || (exports.UploadType = {}));
-function default_1(login, uploadType, table, sysId, input, fileName) {
+function default_1(session, uploadType, table, sysId, input, fileName) {
     return __awaiter(this, void 0, void 0, function () {
         var contentType, fileext, pathToFile, size, url, response;
         return __generator(this, function (_a) {
@@ -101,9 +101,9 @@ function default_1(login, uploadType, table, sysId, input, fileName) {
                     }
                     size = fs.statSync(pathToFile).size;
                     url = "/api/now/attachment/file?table_name=".concat(table, "&table_sys_id=").concat(sysId, "&file_name=").concat(fileName);
-                    return [4 /*yield*/, login.wclient.post(url, fs.createReadStream(pathToFile), {
+                    return [4 /*yield*/, session.httpClient.post(url, fs.createReadStream(pathToFile), {
                             headers: {
-                                "X-UserToken": login.token,
+                                "X-UserToken": session.userToken,
                                 "Content-Type": contentType,
                                 "Content-Length": size,
                                 "Accept": "application/json, text/plain, */*",

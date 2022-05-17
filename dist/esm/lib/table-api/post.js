@@ -34,7 +34,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-export default function createRecord(login, table, data, options) {
+export default function createRecord(session, table, data, options) {
     return __awaiter(this, void 0, void 0, function () {
         var url, urlParmObj, response;
         return __generator(this, function (_a) {
@@ -48,9 +48,9 @@ export default function createRecord(login, table, data, options) {
                         if (options.withDisplayValue)
                             urlParmObj.sysparm_display_value = "all";
                     }
-                    return [4 /*yield*/, login.wclient.post(url, data, {
+                    return [4 /*yield*/, session.httpClient.post(url, data, {
                             headers: {
-                                "X-UserToken": login.token,
+                                "X-UserToken": session.userToken,
                                 "Accept": "application/json"
                             },
                             "params": urlParmObj

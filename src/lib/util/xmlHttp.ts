@@ -1,4 +1,4 @@
-import { LoginData } from "sn-login";
+import { NowSession } from "sn-login";
 import { XMLParser } from "fast-xml-parser";
 
 export interface IXmlHttpOptions {
@@ -6,7 +6,7 @@ export interface IXmlHttpOptions {
   sysparm_xyz: Map<string, string>
 }
 
-export default async function (login: LoginData, options: IXmlHttpOptions): Promise<string> {
+export default async function (session: NowSession, options: IXmlHttpOptions): Promise<string> {
 
   let postBodyObj = {
     "sysparm_processor": options.sysparm_processor
@@ -16,9 +16,9 @@ export default async function (login: LoginData, options: IXmlHttpOptions): Prom
   }
   let postFormData = new URLSearchParams(postBodyObj).toString();
 
-  let response = await login.wclient.post("/xmlhttp.do", postFormData, {
+  let response = await session.httpClient.post("/xmlhttp.do", postFormData, {
     "headers": {
-      "X-UserToken": login.token
+      "X-UserToken": session.userToken
     }
   });
   const parser = new XMLParser({

@@ -1,4 +1,4 @@
-import { LoginData } from "sn-login";
+import { NowSession } from "sn-login";
 export interface EvalScriptData {
     script: string;
     scope: string;
@@ -9,4 +9,4 @@ export interface EvalScriptResponse {
     response: string;
     rollbackLink: string;
 }
-export default function (login: LoginData, data: EvalScriptData): Promise<EvalScriptResponse>;
+export default function (session: NowSession, data: EvalScriptData): Promise<EvalScriptResponse>;

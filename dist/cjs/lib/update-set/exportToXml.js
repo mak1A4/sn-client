@@ -40,7 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var execQuick_1 = __importDefault(require("../script/execQuick"));
-function default_1(login, updateSetSysId, scope) {
+function default_1(session, updateSetSysId, scope) {
     return __awaiter(this, void 0, void 0, function () {
         var exportSysId, url, urlParms, response, regPatt, contentDisposition, fileName;
         return __generator(this, function (_a) {
@@ -50,7 +50,7 @@ function default_1(login, updateSetSysId, scope) {
                             var qex, resultObj;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
-                                    case 0: return [4 /*yield*/, (0, execQuick_1.default)(login, scope, false, true)];
+                                    case 0: return [4 /*yield*/, (0, execQuick_1.default)(session, scope, false, true)];
                                     case 1:
                                         qex = _a.sent();
                                         return [4 /*yield*/, qex(function (inputObj) {
@@ -77,10 +77,10 @@ function default_1(login, updateSetSysId, scope) {
                         "sysparm_sys_id": exportSysId,
                         "sysparm_delete_when_done": "true"
                     };
-                    return [4 /*yield*/, login.wclient.get(url, {
+                    return [4 /*yield*/, session.httpClient.get(url, {
                             params: urlParms,
                             headers: {
-                                "X-UserToken": login.token,
+                                "X-UserToken": session.userToken,
                                 "Connection": "keep-alive"
                             }
                         })];

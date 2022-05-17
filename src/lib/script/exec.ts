@@ -1,4 +1,4 @@
-import { LoginData } from "sn-login";
+import { NowSession } from "sn-login";
 import evalScript from "./eval";
 import { randomUUID } from "crypto";
 import attachmentUpload, { UploadType } from "../attachment/upload";
@@ -17,13 +17,13 @@ declare function execute(execFn: Function, input?: any): Promise<any>
 export type TexecFn = typeof execute;
 
 export default async function (
-  login: LoginData, scope: string, rollback: boolean, timeout: boolean
+  session: NowSession, scope: string, rollback: boolean, timeout: boolean
 ): Promise<TexecFn> {
   return async function (snExecFn: TsnExecFn, inputObject: any = {}): Promise<IExecFnResponse> {
 
     let fakeSysId = randomUUID().replace(/-/g, "")
     let inputAttachmentSysId = await attachmentUpload(
-      login, UploadType.JsonString, "temp", fakeSysId, JSON.stringify(inputObject), fakeSysId + ".json");
+      session, UploadType.JsonString, "temp", fakeSysId, JSON.stringify(inputObject), fakeSysId + ".json");
 
     let getInputObjFnStr = fs.readFileSync("./asset/getInputObj.js", "utf8");
     let getOutputObjFnStr = fs.readFileSync("./asset/getOutputObj.js", "utf8");
@@ -34,7 +34,7 @@ export default async function (
        var outAttachmentSysId = (${getOutputObjFnStr})(result);
        gs.debug("=####" + outAttachmentSysId + "####=")`;
 
-    let evalResult = await evalScript(login, {
+    let evalResult = await evalScript(session, {
       "script": execScript,
       "scope": scope,
       "rollback": rollback,
@@ -44,7 +44,7 @@ export default async function (
     let jsonResultMatch = evalResult.response.match(/=####.*?####=/g);
     if (jsonResultMatch) {
       let resultAttachmentSysId = jsonResultMatch.map((s) => s)[0].replace("####=", "").replace("=####", "");
-      let resultObjPath = await attachmentRetrieve(login, resultAttachmentSysId);
+      let resultObjPath = await attachmentRetrieve(session, resultAttachmentSysId);
       let resultObjStr = fs.readFileSync(resultObjPath, "utf8");
       let resultObj = {};
       try {
@@ -53,8 +53,8 @@ export default async function (
         let buff = Buffer.from(resultObjStr, "base64");
         resultObj = JSON.parse(buff.toString("utf8"));
       }
-      attachmentDelete(login, inputAttachmentSysId)
-      attachmentDelete(login, resultAttachmentSysId)
+      attachmentDelete(session, inputAttachmentSysId)
+      attachmentDelete(session, resultAttachmentSysId)
 
       return {
         "result": resultObj,

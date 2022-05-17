@@ -1,4 +1,4 @@
-import { LoginData, AuthInfo } from "sn-login";
+import { NowSession } from "sn-login";
 import { TexecFn } from "./lib/script/exec";
 import { GlideAjaxData } from "./lib/glide/ajax";
 import { IExportXmlInput } from "./lib/util/exportXml";
@@ -6,6 +6,8 @@ import { IXmlImportInput } from "./lib/util/importXml";
 import { IXmlHttpOptions } from "./lib/util/xmlHttp";
 import { EvalScriptData, EvalScriptResponse } from "./lib/script/eval";
 import { IRetrieveRecordOptions, IRetrieveRecordsOptions, IRetrieveRecordsToFileOptions } from "./lib/table-api/get";
+import { ICreateRecordOptions } from "./lib/table-api/post";
+import { IUpdateRecordOptions } from "./lib/table-api/patch";
 import { UploadType } from "./lib/attachment/upload";
 export interface IScriptInterface {
     eval(script: EvalScriptData): Promise<EvalScriptResponse>;
@@ -16,9 +18,12 @@ export interface IGlide {
     glideAjax(data: GlideAjaxData): Promise<string>;
 }
 export interface ITableApi {
+    createRecord(table: string, dataObj: any, options?: ICreateRecordOptions): Promise<any>;
+    updateRecord(table: string, sysId: string, dataObj: any, options?: IUpdateRecordOptions): Promise<any>;
     retrieveRecord(table: string, sysId: string, options?: IRetrieveRecordOptions): Promise<any>;
     retrieveRecords(table: string, options?: IRetrieveRecordsOptions): Promise<any[]>;
     streamRecordsToFile(table: string, options: IRetrieveRecordsToFileOptions): Promise<string>;
+    deleteRecord(table: string, sysId: string): Promise<number>;
 }
 export interface IUtil {
     clearCache(invalidate?: boolean): Promise<string>;
@@ -46,7 +51,7 @@ export interface IUpdateSet {
     commit(remoteUpdateSetSysId: string, scope: string): Promise<any>;
 }
 export interface IRequestFunctions {
-    getLoginData(): LoginData;
+    getNowSession(): NowSession;
     util: IUtil;
     glide: IGlide;
     script: IScriptInterface;
@@ -55,5 +60,5 @@ export interface IRequestFunctions {
     attachment: IAttachment;
     updateSet: IUpdateSet;
 }
-export declare function snRequest(snInstanceName: string, userName: string, auth?: AuthInfo): Promise<IRequestFunctions>;
+export declare function snRequest(snInstanceName: string, userName: string, password?: string): Promise<IRequestFunctions>;
 export default snRequest;

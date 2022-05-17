@@ -36,13 +36,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-function updateRecord(login, table, data, options) {
+function updateRecord(session, table, sysId, data, options) {
     return __awaiter(this, void 0, void 0, function () {
         var url, urlParmObj, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    url = "/api/now/table/".concat(table);
+                    url = "/api/now/table/".concat(table, "/").concat(sysId);
                     urlParmObj = {};
                     if (options) {
                         if (options.fields)
@@ -50,9 +50,9 @@ function updateRecord(login, table, data, options) {
                         if (options.withDisplayValue)
                             urlParmObj.sysparm_display_value = "all";
                     }
-                    return [4 /*yield*/, login.wclient.patch(url, data, {
+                    return [4 /*yield*/, session.httpClient.patch(url, data, {
                             headers: {
-                                "X-UserToken": login.token,
+                                "X-UserToken": session.userToken,
                                 "Accept": "application/json"
                             },
                             "params": urlParmObj

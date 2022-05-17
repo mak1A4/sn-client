@@ -65,13 +65,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var keepAlive_1 = __importDefault(require("../util/keepAlive"));
 var cheerio = __importStar(require("cheerio"));
 var h2p = require("html2plaintext");
-function default_1(login, data) {
+function default_1(session, data) {
     return __awaiter(this, void 0, void 0, function () {
         var postFormData, keepAliveInterval, keepAliveTimeout;
         return __generator(this, function (_a) {
             postFormData = new URLSearchParams({
                 "script": data.script,
-                "sysparm_ck": login.token,
+                "sysparm_ck": session.userToken,
                 "sys_scope": data.scope,
                 "runscript": "Run script",
                 "quota_managed_transaction": (data.timeout) ? "on" : "off",
@@ -79,13 +79,13 @@ function default_1(login, data) {
             }).toString();
             keepAliveTimeout = setTimeout(function () {
                 keepAliveInterval = setInterval(function () {
-                    (0, keepAlive_1.default)(login);
+                    (0, keepAlive_1.default)(session);
                 }, 1000);
             }, 15000);
             return [2 /*return*/, new Promise(function (resolve, reject) {
-                    login.wclient.post("/sys.scripts.do", postFormData, {
+                    session.httpClient.post("/sys.scripts.do", postFormData, {
                         headers: {
-                            "X-UserToken": login.token,
+                            "X-UserToken": session.userToken,
                             "Connection": "keep-alive",
                             "Cache-Control": "max-age=0",
                             "User-Agent": "SN-Node Client",

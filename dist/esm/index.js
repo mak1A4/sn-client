@@ -35,7 +35,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import * as R from "ramda";
-import { createInterface } from "readline";
 import snlogin from "sn-login";
 import execScript from "./lib/script/exec";
 import execQuick from "./lib/script/execQuick";
@@ -47,6 +46,9 @@ import getTableSchema from "./lib/util/tableSchema";
 import clearCache from "./lib/util/clearCache";
 import evalScript from "./lib/script/eval";
 import { retrieveRecord, retrieveRecords, streamRecordsToFile } from "./lib/table-api/get";
+import createRecord from "./lib/table-api/post";
+import updateRecord from "./lib/table-api/patch";
+import deleteRecord from "./lib/table-api/delete";
 import getCurrentAppList from "./lib/application/getCurrentList";
 import switchApp from "./lib/application/switch";
 import retrieveAttachment from "./lib/attachment/retrieve";
@@ -59,121 +61,112 @@ import previewUpdateSet from "./lib/update-set/preview";
 import validateUpdateSet from "./lib/update-set/validate";
 import switchUpdateSet from "./lib/update-set/switch";
 import getCurrentUpdateSetList from "./lib/update-set/getCurrentList";
-export function snRequest(snInstanceName, userName, auth) {
+export function snRequest(snInstanceName, userName, password) {
     return __awaiter(this, void 0, void 0, function () {
-        var login, e_1, rl_1, questionText_1, mfaToken, authObj, getLoginData;
+        var nowSession, getNowSession;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 5]);
-                    return [4 /*yield*/, snlogin(snInstanceName, userName, auth)];
+                case 0: return [4 /*yield*/, snlogin(snInstanceName, userName, password)];
                 case 1:
-                    login = _a.sent();
-                    return [3 /*break*/, 5];
-                case 2:
-                    e_1 = _a.sent();
-                    rl_1 = createInterface({
-                        input: process.stdin,
-                        output: process.stdout
-                    });
-                    questionText_1 = "Login failed, try again with new MFA Token: ";
-                    return [4 /*yield*/, new Promise(function (resolve) { return rl_1.question(questionText_1, resolve); })
-                            .finally(function () { return rl_1.close(); })];
-                case 3:
-                    mfaToken = _a.sent();
-                    authObj = { "mfaToken": mfaToken };
-                    if (auth && auth.password)
-                        authObj.password = auth.password;
-                    return [4 /*yield*/, snlogin(snInstanceName, userName, authObj)];
-                case 4:
-                    login = _a.sent();
-                    return [3 /*break*/, 5];
-                case 5:
-                    if (!login)
-                        throw "Login has failed ...";
-                    getLoginData = function () {
-                        return login;
+                    nowSession = _a.sent();
+                    getNowSession = function () {
+                        return nowSession;
                     };
                     return [2 /*return*/, {
-                            "getLoginData": getLoginData,
+                            "getNowSession": getNowSession,
                             "script": {
-                                "eval": R.curry(evalScript)(login),
-                                "executeFn": R.curry(execScript)(login),
-                                "executeFnQuick": R.curry(execQuick)(login)
+                                "eval": R.curry(evalScript)(nowSession),
+                                "executeFn": R.curry(execScript)(nowSession),
+                                "executeFnQuick": R.curry(execQuick)(nowSession)
                             },
                             "application": {
                                 "getCurrentList": function () {
                                     return __awaiter(this, void 0, void 0, function () {
                                         return __generator(this, function (_a) {
-                                            return [2 /*return*/, getCurrentAppList(login)];
+                                            return [2 /*return*/, getCurrentAppList(nowSession)];
                                         });
                                     });
                                 },
                                 "switch": function (applicationSysId) {
                                     return __awaiter(this, void 0, void 0, function () {
                                         return __generator(this, function (_a) {
-                                            return [2 /*return*/, switchApp(login, applicationSysId)];
+                                            return [2 /*return*/, switchApp(nowSession, applicationSysId)];
                                         });
                                     });
                                 }
                             },
                             "attachment": {
-                                "retrieve": R.curry(retrieveAttachment)(login),
-                                "delete": R.curry(deleteAttachment)(login),
+                                "retrieve": R.curry(retrieveAttachment)(nowSession),
+                                "delete": R.curry(deleteAttachment)(nowSession),
                                 "upload": function (uploadType, table, sysId, input, fileName) { return __awaiter(_this, void 0, void 0, function () {
                                     return __generator(this, function (_a) {
-                                        return [2 /*return*/, uploadAttachment(login, uploadType, table, sysId, input, fileName)];
+                                        return [2 /*return*/, uploadAttachment(nowSession, uploadType, table, sysId, input, fileName)];
                                     });
                                 }); }
                             },
                             "glide": {
-                                "glideAjax": R.curry(glideAjax)(login)
+                                "glideAjax": R.curry(glideAjax)(nowSession)
                             },
                             "tableApi": {
+                                "createRecord": function (table, dataObj, options) {
+                                    return __awaiter(this, void 0, void 0, function () {
+                                        return __generator(this, function (_a) {
+                                            return [2 /*return*/, createRecord(nowSession, table, dataObj, options)];
+                                        });
+                                    });
+                                },
+                                "updateRecord": function (table, sysId, dataObj, options) {
+                                    return __awaiter(this, void 0, void 0, function () {
+                                        return __generator(this, function (_a) {
+                                            return [2 /*return*/, updateRecord(nowSession, table, sysId, dataObj, options)];
+                                        });
+                                    });
+                                },
                                 "retrieveRecord": function (table, sysId, options) {
                                     return __awaiter(this, void 0, void 0, function () {
                                         return __generator(this, function (_a) {
-                                            return [2 /*return*/, retrieveRecord(login, table, sysId, options)];
+                                            return [2 /*return*/, retrieveRecord(nowSession, table, sysId, options)];
                                         });
                                     });
                                 },
                                 "retrieveRecords": function (table, options) {
                                     return __awaiter(this, void 0, void 0, function () {
                                         return __generator(this, function (_a) {
-                                            return [2 /*return*/, retrieveRecords(login, table, options)];
+                                            return [2 /*return*/, retrieveRecords(nowSession, table, options)];
                                         });
                                     });
                                 },
-                                "streamRecordsToFile": R.curry(streamRecordsToFile)(login)
+                                "streamRecordsToFile": R.curry(streamRecordsToFile)(nowSession),
+                                "deleteRecord": R.curry(deleteRecord)(nowSession)
                             },
                             "util": {
-                                "xmlImport": R.curry(xmlImport)(login),
-                                "xmlExport": R.curry(xmlExport)(login),
-                                "xmlHttpRequest": R.curry(xmlHttp)(login),
-                                "getTableSchema": R.curry(getTableSchema)(login),
+                                "xmlImport": R.curry(xmlImport)(nowSession),
+                                "xmlExport": R.curry(xmlExport)(nowSession),
+                                "xmlHttpRequest": R.curry(xmlHttp)(nowSession),
+                                "getTableSchema": R.curry(getTableSchema)(nowSession),
                                 "clearCache": function (invalidate) {
                                     return __awaiter(this, void 0, void 0, function () {
                                         return __generator(this, function (_a) {
-                                            return [2 /*return*/, clearCache(login, invalidate)];
+                                            return [2 /*return*/, clearCache(nowSession, invalidate)];
                                         });
                                     });
                                 }
                             },
                             "updateSet": {
-                                "create": R.curry(createUpdateSet)(login),
+                                "create": R.curry(createUpdateSet)(nowSession),
                                 "getCurrentList": function () {
                                     return __awaiter(this, void 0, void 0, function () {
                                         return __generator(this, function (_a) {
-                                            return [2 /*return*/, getCurrentUpdateSetList(login)];
+                                            return [2 /*return*/, getCurrentUpdateSetList(nowSession)];
                                         });
                                     });
                                 },
-                                "exportToXml": R.curry(exportUpdateSetToXml)(login),
-                                "preview": R.curry(previewUpdateSet)(login),
-                                "switch": R.curry(switchUpdateSet)(login),
-                                "validate": R.curry(validateUpdateSet)(login),
-                                "commit": R.curry(commitUpdateSet)(login)
+                                "exportToXml": R.curry(exportUpdateSetToXml)(nowSession),
+                                "preview": R.curry(previewUpdateSet)(nowSession),
+                                "switch": R.curry(switchUpdateSet)(nowSession),
+                                "validate": R.curry(validateUpdateSet)(nowSession),
+                                "commit": R.curry(commitUpdateSet)(nowSession)
                             }
                         }];
             }

@@ -1,4 +1,4 @@
-import { LoginData } from "sn-login";
+import { NowSession } from "sn-login";
 import keepAlive from "../util/keepAlive";
 import * as cheerio from "cheerio";
 const h2p = require("html2plaintext");
@@ -15,11 +15,11 @@ export interface EvalScriptResponse {
   rollbackLink: string
 }
 
-export default async function (login: LoginData, data: EvalScriptData): Promise<EvalScriptResponse> {
+export default async function (session: NowSession, data: EvalScriptData): Promise<EvalScriptResponse> {
 
   let postFormData = new URLSearchParams({
     "script": data.script,
-    "sysparm_ck": login.token,
+    "sysparm_ck": session.userToken,
     "sys_scope": data.scope,
     "runscript": "Run script",
     "quota_managed_transaction": (data.timeout) ? "on" : "off",
@@ -29,14 +29,14 @@ export default async function (login: LoginData, data: EvalScriptData): Promise<
   let keepAliveInterval: NodeJS.Timer;
   let keepAliveTimeout = setTimeout(() => {
     keepAliveInterval = setInterval(() => {
-      keepAlive(login);
+      keepAlive(session);
     }, 1000);
   }, 15000);
 
   return new Promise<EvalScriptResponse>((resolve, reject) => {
-    login.wclient.post("/sys.scripts.do", postFormData, {
+    session.httpClient.post("/sys.scripts.do", postFormData, {
       headers: {
-        "X-UserToken": login.token,
+        "X-UserToken": session.userToken,
         "Connection": "keep-alive",
         "Cache-Control": "max-age=0",
         "User-Agent": "SN-Node Client",

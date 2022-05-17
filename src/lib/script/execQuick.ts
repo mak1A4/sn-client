@@ -1,4 +1,4 @@
-import { LoginData } from "sn-login";
+import { NowSession } from "sn-login";
 import evalScript from "./eval";
 import { TexecFn, TsnExecFn, IExecFnResponse } from "./exec";
 
@@ -7,7 +7,7 @@ export interface IExecFnQuickResponse extends IExecFnResponse {
 }
 
 export default async function (
-  login: LoginData, scope: string, rollback: boolean, timeout: boolean
+  session: NowSession, scope: string, rollback: boolean, timeout: boolean
 ): Promise<TexecFn> {
   return async function (execFn: TsnExecFn, inputObject: any = {}): Promise<IExecFnQuickResponse> {
     let execScript =
@@ -16,7 +16,7 @@ export default async function (
        if (!result) result = {};
        gs.debug("=####" + JSON.stringify(result) + "####=")`;
 
-    let evalResult = await evalScript(login, {
+    let evalResult = await evalScript(session, {
       "script": execScript,
       "scope": scope,
       "rollback": rollback,

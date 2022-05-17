@@ -1,6 +1,6 @@
-import { LoginData } from "sn-login";
+import { NowSession } from "sn-login";
 export interface IExportXmlInput {
     table: string;
     query: string;
 }
-export default function (login: LoginData, input: IExportXmlInput): Promise<string>;
+export default function (session: NowSession, input: IExportXmlInput): Promise<string>;

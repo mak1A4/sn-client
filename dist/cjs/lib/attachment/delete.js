@@ -36,18 +36,18 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-function default_1(login, attachmentSysId) {
+function default_1(session, attachmentSysId) {
     return __awaiter(this, void 0, void 0, function () {
         var url, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     url = "/api/now/attachment/".concat(attachmentSysId);
-                    return [4 /*yield*/, login.wclient.delete(url, {
+                    return [4 /*yield*/, session.httpClient.delete(url, {
                             headers: {
                                 "Accept": "application/json",
                                 "Content-Type": "application/json",
-                                "X-UserToken": login.token
+                                "X-UserToken": session.userToken
                             }
                         })];
                 case 1:

@@ -65,9 +65,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var fs = __importStar(require("fs"));
 var path = __importStar(require("path"));
 var request_1 = __importDefault(require("request"));
-function default_1(login, input) {
+function default_1(session, input) {
     return __awaiter(this, void 0, void 0, function () {
-        var defaultHeader, baseURL, xjar, filename;
+        var defaultHeader, baseURL, xjar, sessionJar, filename;
         return __generator(this, function (_a) {
             defaultHeader = {
                 "Accept": "*/*",
@@ -78,23 +78,24 @@ function default_1(login, input) {
                 "Accept-Language": "en-US,en;q=0.8",
                 "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
             };
-            baseURL = login.wclient.defaults.baseURL;
+            baseURL = session.httpClient.defaults.baseURL;
             xjar = request_1.default.jar();
-            if (login.cookieJar) {
-                login.cookieJar.getCookiesSync(baseURL).forEach(function (c) {
+            sessionJar = session.getCookieJar();
+            if (sessionJar) {
+                sessionJar.getCookiesSync(baseURL).forEach(function (c) {
                     xjar.setCookie(c.cookieString(), baseURL);
                 });
             }
             filename = path.basename(input.filePath);
             return [2 /*return*/, new Promise(function (resolve, reject) {
-                    (0, request_1.default)(login.wclient.defaults.baseURL + "/sys_upload.do", {
+                    (0, request_1.default)(session.httpClient.defaults.baseURL + "/sys_upload.do", {
                         "method": "POST",
                         "headers": defaultHeader,
                         "followAllRedirects": true,
                         "gzip": true,
                         "jar": xjar,
                         "formData": {
-                            "sysparm_ck": login.token,
+                            "sysparm_ck": session.userToken,
                             "sysparm_target": input.target,
                             "file": {
                                 "value": fs.createReadStream(input.filePath),

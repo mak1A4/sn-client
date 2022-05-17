@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-function default_1(login, applicationSysId) {
+function default_1(session, applicationSysId) {
     return __awaiter(this, void 0, void 0, function () {
         var url, requestBody, response;
         return __generator(this, function (_a) {
@@ -44,9 +44,9 @@ function default_1(login, applicationSysId) {
                 case 0:
                     url = "/api/now/ui/concoursepicker/application";
                     requestBody = { "app_id": applicationSysId };
-                    return [4 /*yield*/, login.wclient.put(url, requestBody, {
+                    return [4 /*yield*/, session.httpClient.put(url, requestBody, {
                             headers: {
-                                "X-UserToken": login.token,
+                                "X-UserToken": session.userToken,
                                 "Connection": "keep-alive",
                                 "Content-Type": "application/json",
                                 "Accept": "application/json",

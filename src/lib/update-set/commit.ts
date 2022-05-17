@@ -1,8 +1,8 @@
-import { LoginData } from "sn-login";
+import { NowSession } from "sn-login";
 import glideAjax, { GlideAjaxData } from "../glide/ajax";
 
 export default async function (
-  login: LoginData, remoteUpdateSetSysId: string, scope: string
+  session: NowSession, remoteUpdateSetSysId: string, scope: string
 ): Promise<any> {
 
   var parms = new Map<string, string>();
@@ -14,5 +14,5 @@ export default async function (
     "sysparm_scope": scope,
     "sysparm_xyz": parms
   } as GlideAjaxData;
-  return await glideAjax(login, ajaxOptions);
+  return await glideAjax(session, ajaxOptions);
 }

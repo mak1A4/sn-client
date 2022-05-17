@@ -1,4 +1,4 @@
-import { LoginData } from "sn-login";
+import { NowSession } from "sn-login";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
@@ -12,7 +12,7 @@ export enum UploadType {
 }
 
 export default async function (
-  login: LoginData, uploadType: UploadType, table: string,
+  session: NowSession, uploadType: UploadType, table: string,
   sysId: string, input: string, fileName?: string
 ): Promise<string> {
   
@@ -40,9 +40,9 @@ export default async function (
   const { size } = fs.statSync(pathToFile);
 
   let url = `/api/now/attachment/file?table_name=${table}&table_sys_id=${sysId}&file_name=${fileName}`
-  let response = await login.wclient.post(url, fs.createReadStream(pathToFile), {
+  let response = await session.httpClient.post(url, fs.createReadStream(pathToFile), {
     headers: {
-      "X-UserToken": login.token,
+      "X-UserToken": session.userToken,
       "Content-Type": contentType,
       "Content-Length": size,
       "Accept": "application/json, text/plain, */*",

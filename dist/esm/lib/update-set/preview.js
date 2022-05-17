@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import glideAjax from "../glide/ajax";
-export default function (login, remoteUpdateSetSysId, scope) {
+export default function (session, remoteUpdateSetSysId, scope) {
     return __awaiter(this, void 0, void 0, function () {
         var parms, ajaxOptions;
         return __generator(this, function (_a) {
@@ -49,7 +49,7 @@ export default function (login, remoteUpdateSetSysId, scope) {
                         "sysparm_scope": scope,
                         "sysparm_xyz": parms
                     };
-                    return [4 /*yield*/, glideAjax(login, ajaxOptions)];
+                    return [4 /*yield*/, glideAjax(session, ajaxOptions)];
                 case 1: return [2 /*return*/, _a.sent()];
             }
         });

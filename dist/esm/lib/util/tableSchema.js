@@ -35,14 +35,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import { XMLParser } from "fast-xml-parser";
-export default function (login, tableName) {
+export default function (session, tableName) {
     return __awaiter(this, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, login.wclient.get("/".concat(tableName, ".do?SCHEMA"), {
+                case 0: return [4 /*yield*/, session.httpClient.get("/".concat(tableName, ".do?SCHEMA"), {
                         "headers": {
-                            "X-UserToken": login.token,
+                            "X-UserToken": session.userToken,
                             "Accept": "application/xml, text/plain, */*",
                             "Connection": "keep-alive"
                         }

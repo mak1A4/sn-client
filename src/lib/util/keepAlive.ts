@@ -1,10 +1,10 @@
-import { LoginData } from "sn-login";
+import { NowSession } from "sn-login";
 
-export default function (login: LoginData): Promise<void> {
+export default function (session: NowSession): Promise<void> {
   return new Promise<void>((resolve, reject) => {
-    login.wclient.get("/cancel_my_transaction.do?status=true&sysparm_output=json", {
+    session.httpClient.get("/cancel_my_transaction.do?status=true&sysparm_output=json", {
       "headers": {
-        "X-UserToken": login.token,
+        "X-UserToken": session.userToken,
         "Accept": "application/json, text/plain, */*",
         "Connection": "keep-alive",
         "X-WantSessionNotificationMessages": "true"

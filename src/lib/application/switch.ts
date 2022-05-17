@@ -1,12 +1,12 @@
-import { LoginData } from "sn-login";
+import { NowSession } from "sn-login";
 
-export default async function (login: LoginData, applicationSysId: string): Promise<any> {
+export default async function (session: NowSession, applicationSysId: string): Promise<any> {
 
   let url = `/api/now/ui/concoursepicker/application`;
   let requestBody = { "app_id": applicationSysId };
-  let response = await login.wclient.put(url, requestBody, {
+  let response = await session.httpClient.put(url, requestBody, {
     headers: {
-      "X-UserToken": login.token,
+      "X-UserToken": session.userToken,
       "Connection": "keep-alive",
       "Content-Type": "application/json",
       "Accept": "application/json",

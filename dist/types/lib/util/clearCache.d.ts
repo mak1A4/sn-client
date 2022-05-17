@@ -1,2 +1,2 @@
-import { LoginData } from "sn-login";
-export default function clearCache(login: LoginData, invalidate?: boolean): Promise<string>;
+import { NowSession } from "sn-login";
+export default function clearCache(session: NowSession, invalidate?: boolean): Promise<string>;

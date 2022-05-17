@@ -3,10 +3,10 @@ import * as path from "path";
 import * as fs from "fs";
 import * as stream from "stream";
 import * as util from "util";
-import { LoginData } from "sn-login";
+import { NowSession } from "sn-login";
 import keepAlive from "../util/keepAlive";
 
-export default async function (login: LoginData, attachmentSysId: string, outPath?: string, encoding?: BufferEncoding): Promise<string> {
+export default async function (session: NowSession, attachmentSysId: string, outPath?: string, encoding?: BufferEncoding): Promise<string> {
   if (!outPath) outPath = path.join(os.tmpdir(), Math.random().toString(36).substring(2));
   const writer = fs.createWriteStream(outPath, encoding || "utf8");
   const finished = util.promisify(stream.finished);
@@ -18,16 +18,16 @@ export default async function (login: LoginData, attachmentSysId: string, outPat
   let keepAliveInterval: NodeJS.Timer;
   let keepAliveTimeout = setTimeout(() => {
     keepAliveInterval = setInterval(() => {
-      keepAlive(login);
+      keepAlive(session);
     }, 1000);
   }, 15000);
 
   return new Promise<any>((resolve, reject) => {
-    login.wclient.get(url, {
+    session.httpClient.get(url, {
       headers: {
         "Accept": "*/*",
         "Connection": "keep-alive",
-        "X-UserToken": login.token
+        "X-UserToken": session.userToken
       },
       responseType: "stream"
     }).then((response) => {

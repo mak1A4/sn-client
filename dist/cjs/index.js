@@ -64,7 +64,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.snRequest = void 0;
 var R = __importStar(require("ramda"));
-var readline_1 = require("readline");
 var sn_login_1 = __importDefault(require("sn-login"));
 var exec_1 = __importDefault(require("./lib/script/exec"));
 var execQuick_1 = __importDefault(require("./lib/script/execQuick"));
@@ -76,10 +75,13 @@ var tableSchema_1 = __importDefault(require("./lib/util/tableSchema"));
 var clearCache_1 = __importDefault(require("./lib/util/clearCache"));
 var eval_1 = __importDefault(require("./lib/script/eval"));
 var get_1 = require("./lib/table-api/get");
+var post_1 = __importDefault(require("./lib/table-api/post"));
+var patch_1 = __importDefault(require("./lib/table-api/patch"));
+var delete_1 = __importDefault(require("./lib/table-api/delete"));
 var getCurrentList_1 = __importDefault(require("./lib/application/getCurrentList"));
 var switch_1 = __importDefault(require("./lib/application/switch"));
 var retrieve_1 = __importDefault(require("./lib/attachment/retrieve"));
-var delete_1 = __importDefault(require("./lib/attachment/delete"));
+var delete_2 = __importDefault(require("./lib/attachment/delete"));
 var upload_1 = __importDefault(require("./lib/attachment/upload"));
 var create_1 = __importDefault(require("./lib/update-set/create"));
 var commit_1 = __importDefault(require("./lib/update-set/commit"));
@@ -88,121 +90,112 @@ var preview_1 = __importDefault(require("./lib/update-set/preview"));
 var validate_1 = __importDefault(require("./lib/update-set/validate"));
 var switch_2 = __importDefault(require("./lib/update-set/switch"));
 var getCurrentList_2 = __importDefault(require("./lib/update-set/getCurrentList"));
-function snRequest(snInstanceName, userName, auth) {
+function snRequest(snInstanceName, userName, password) {
     return __awaiter(this, void 0, void 0, function () {
-        var login, e_1, rl_1, questionText_1, mfaToken, authObj, getLoginData;
+        var nowSession, getNowSession;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 5]);
-                    return [4 /*yield*/, (0, sn_login_1.default)(snInstanceName, userName, auth)];
+                case 0: return [4 /*yield*/, (0, sn_login_1.default)(snInstanceName, userName, password)];
                 case 1:
-                    login = _a.sent();
-                    return [3 /*break*/, 5];
-                case 2:
-                    e_1 = _a.sent();
-                    rl_1 = (0, readline_1.createInterface)({
-                        input: process.stdin,
-                        output: process.stdout
-                    });
-                    questionText_1 = "Login failed, try again with new MFA Token: ";
-                    return [4 /*yield*/, new Promise(function (resolve) { return rl_1.question(questionText_1, resolve); })
-                            .finally(function () { return rl_1.close(); })];
-                case 3:
-                    mfaToken = _a.sent();
-                    authObj = { "mfaToken": mfaToken };
-                    if (auth && auth.password)
-                        authObj.password = auth.password;
-                    return [4 /*yield*/, (0, sn_login_1.default)(snInstanceName, userName, authObj)];
-                case 4:
-                    login = _a.sent();
-                    return [3 /*break*/, 5];
-                case 5:
-                    if (!login)
-                        throw "Login has failed ...";
-                    getLoginData = function () {
-                        return login;
+                    nowSession = _a.sent();
+                    getNowSession = function () {
+                        return nowSession;
                     };
                     return [2 /*return*/, {
-                            "getLoginData": getLoginData,
+                            "getNowSession": getNowSession,
                             "script": {
-                                "eval": R.curry(eval_1.default)(login),
-                                "executeFn": R.curry(exec_1.default)(login),
-                                "executeFnQuick": R.curry(execQuick_1.default)(login)
+                                "eval": R.curry(eval_1.default)(nowSession),
+                                "executeFn": R.curry(exec_1.default)(nowSession),
+                                "executeFnQuick": R.curry(execQuick_1.default)(nowSession)
                             },
                             "application": {
                                 "getCurrentList": function () {
                                     return __awaiter(this, void 0, void 0, function () {
                                         return __generator(this, function (_a) {
-                                            return [2 /*return*/, (0, getCurrentList_1.default)(login)];
+                                            return [2 /*return*/, (0, getCurrentList_1.default)(nowSession)];
                                         });
                                     });
                                 },
                                 "switch": function (applicationSysId) {
                                     return __awaiter(this, void 0, void 0, function () {
                                         return __generator(this, function (_a) {
-                                            return [2 /*return*/, (0, switch_1.default)(login, applicationSysId)];
+                                            return [2 /*return*/, (0, switch_1.default)(nowSession, applicationSysId)];
                                         });
                                     });
                                 }
                             },
                             "attachment": {
-                                "retrieve": R.curry(retrieve_1.default)(login),
-                                "delete": R.curry(delete_1.default)(login),
+                                "retrieve": R.curry(retrieve_1.default)(nowSession),
+                                "delete": R.curry(delete_2.default)(nowSession),
                                 "upload": function (uploadType, table, sysId, input, fileName) { return __awaiter(_this, void 0, void 0, function () {
                                     return __generator(this, function (_a) {
-                                        return [2 /*return*/, (0, upload_1.default)(login, uploadType, table, sysId, input, fileName)];
+                                        return [2 /*return*/, (0, upload_1.default)(nowSession, uploadType, table, sysId, input, fileName)];
                                     });
                                 }); }
                             },
                             "glide": {
-                                "glideAjax": R.curry(ajax_1.default)(login)
+                                "glideAjax": R.curry(ajax_1.default)(nowSession)
                             },
                             "tableApi": {
+                                "createRecord": function (table, dataObj, options) {
+                                    return __awaiter(this, void 0, void 0, function () {
+                                        return __generator(this, function (_a) {
+                                            return [2 /*return*/, (0, post_1.default)(nowSession, table, dataObj, options)];
+                                        });
+                                    });
+                                },
+                                "updateRecord": function (table, sysId, dataObj, options) {
+                                    return __awaiter(this, void 0, void 0, function () {
+                                        return __generator(this, function (_a) {
+                                            return [2 /*return*/, (0, patch_1.default)(nowSession, table, sysId, dataObj, options)];
+                                        });
+                                    });
+                                },
                                 "retrieveRecord": function (table, sysId, options) {
                                     return __awaiter(this, void 0, void 0, function () {
                                         return __generator(this, function (_a) {
-                                            return [2 /*return*/, (0, get_1.retrieveRecord)(login, table, sysId, options)];
+                                            return [2 /*return*/, (0, get_1.retrieveRecord)(nowSession, table, sysId, options)];
                                         });
                                     });
                                 },
                                 "retrieveRecords": function (table, options) {
                                     return __awaiter(this, void 0, void 0, function () {
                                         return __generator(this, function (_a) {
-                                            return [2 /*return*/, (0, get_1.retrieveRecords)(login, table, options)];
+                                            return [2 /*return*/, (0, get_1.retrieveRecords)(nowSession, table, options)];
                                         });
                                     });
                                 },
-                                "streamRecordsToFile": R.curry(get_1.streamRecordsToFile)(login)
+                                "streamRecordsToFile": R.curry(get_1.streamRecordsToFile)(nowSession),
+                                "deleteRecord": R.curry(delete_1.default)(nowSession)
                             },
                             "util": {
-                                "xmlImport": R.curry(importXml_1.default)(login),
-                                "xmlExport": R.curry(exportXml_1.default)(login),
-                                "xmlHttpRequest": R.curry(xmlHttp_1.default)(login),
-                                "getTableSchema": R.curry(tableSchema_1.default)(login),
+                                "xmlImport": R.curry(importXml_1.default)(nowSession),
+                                "xmlExport": R.curry(exportXml_1.default)(nowSession),
+                                "xmlHttpRequest": R.curry(xmlHttp_1.default)(nowSession),
+                                "getTableSchema": R.curry(tableSchema_1.default)(nowSession),
                                 "clearCache": function (invalidate) {
                                     return __awaiter(this, void 0, void 0, function () {
                                         return __generator(this, function (_a) {
-                                            return [2 /*return*/, (0, clearCache_1.default)(login, invalidate)];
+                                            return [2 /*return*/, (0, clearCache_1.default)(nowSession, invalidate)];
                                         });
                                     });
                                 }
                             },
                             "updateSet": {
-                                "create": R.curry(create_1.default)(login),
+                                "create": R.curry(create_1.default)(nowSession),
                                 "getCurrentList": function () {
                                     return __awaiter(this, void 0, void 0, function () {
                                         return __generator(this, function (_a) {
-                                            return [2 /*return*/, (0, getCurrentList_2.default)(login)];
+                                            return [2 /*return*/, (0, getCurrentList_2.default)(nowSession)];
                                         });
                                     });
                                 },
-                                "exportToXml": R.curry(exportToXml_1.default)(login),
-                                "preview": R.curry(preview_1.default)(login),
-                                "switch": R.curry(switch_2.default)(login),
-                                "validate": R.curry(validate_1.default)(login),
-                                "commit": R.curry(commit_1.default)(login)
+                                "exportToXml": R.curry(exportToXml_1.default)(nowSession),
+                                "preview": R.curry(preview_1.default)(nowSession),
+                                "switch": R.curry(switch_2.default)(nowSession),
+                                "validate": R.curry(validate_1.default)(nowSession),
+                                "commit": R.curry(commit_1.default)(nowSession)
                             }
                         }];
             }

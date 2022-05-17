@@ -1,11 +1,11 @@
-import { LoginData } from "sn-login";
+import { NowSession } from "sn-login";
 import execQuick from "../script/execQuick";
 const h2p = require("html2plaintext");
 
-export default async function clearCache(login: LoginData, invalidate?: boolean): Promise<string> {
-  let response = await login.wclient.get("/cache.do", {
+export default async function clearCache(session: NowSession, invalidate?: boolean): Promise<string> {
+  let response = await session.httpClient.get("/cache.do", {
     "headers": {
-      "X-UserToken": login.token,
+      "X-UserToken": session.userToken,
       "Connection": "keep-alive"
     }
   });
@@ -15,7 +15,7 @@ export default async function clearCache(login: LoginData, invalidate?: boolean)
   bodyStr = bodyStr.substring(bodyStr.indexOf("\n") + 1);
 
   if (invalidate === true) {
-    let execFn = await execQuick(login, "global", false, true);
+    let execFn = await execQuick(session, "global", false, true);
     await execFn(function() {
       //@ts-ignore
       gs.invalidateCache();

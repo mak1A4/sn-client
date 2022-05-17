@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import evalScript from "./eval";
-export default function (login, scope, rollback, timeout) {
+export default function (session, scope, rollback, timeout) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             return [2 /*return*/, function (execFn, inputObject) {
@@ -46,7 +46,7 @@ export default function (login, scope, rollback, timeout) {
                             switch (_a.label) {
                                 case 0:
                                     execScript = "var inputObj = JSON.parse('".concat(JSON.stringify(inputObject), "');\n       var result = (").concat(execFn.toString(), ")(inputObj);\n       if (!result) result = {};\n       gs.debug(\"=####\" + JSON.stringify(result) + \"####=\")");
-                                    return [4 /*yield*/, evalScript(login, {
+                                    return [4 /*yield*/, evalScript(session, {
                                             "script": execScript,
                                             "scope": scope,
                                             "rollback": rollback,

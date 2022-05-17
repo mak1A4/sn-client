@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import execQuick from "../script/execQuick";
-export default function (login, updateSetSysId, scope) {
+export default function (session, updateSetSysId, scope) {
     return __awaiter(this, void 0, void 0, function () {
         var exportSysId, url, urlParms, response, regPatt, contentDisposition, fileName;
         return __generator(this, function (_a) {
@@ -45,7 +45,7 @@ export default function (login, updateSetSysId, scope) {
                             var qex, resultObj;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
-                                    case 0: return [4 /*yield*/, execQuick(login, scope, false, true)];
+                                    case 0: return [4 /*yield*/, execQuick(session, scope, false, true)];
                                     case 1:
                                         qex = _a.sent();
                                         return [4 /*yield*/, qex(function (inputObj) {
@@ -72,10 +72,10 @@ export default function (login, updateSetSysId, scope) {
                         "sysparm_sys_id": exportSysId,
                         "sysparm_delete_when_done": "true"
                     };
-                    return [4 /*yield*/, login.wclient.get(url, {
+                    return [4 /*yield*/, session.httpClient.get(url, {
                             params: urlParms,
                             headers: {
-                                "X-UserToken": login.token,
+                                "X-UserToken": session.userToken,
                                 "Connection": "keep-alive"
                             }
                         })];

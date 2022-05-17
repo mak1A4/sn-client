@@ -1,13 +1,13 @@
-import { LoginData } from "sn-login";
+import { NowSession } from "sn-login";
 
-export default async function (login: LoginData, attachmentSysId: string): Promise<number> {
+export default async function (session: NowSession, attachmentSysId: string): Promise<number> {
 
   let url = `/api/now/attachment/${attachmentSysId}`;
-  let response = await login.wclient.delete(url, {
+  let response = await session.httpClient.delete(url, {
     headers: {
       "Accept": "application/json",
       "Content-Type": "application/json",
-      "X-UserToken": login.token
+      "X-UserToken": session.userToken
     }
   });
   return response.status;

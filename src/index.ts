@@ -1,6 +1,5 @@
 import * as R from "ramda";
-import { createInterface } from "readline";
-import snlogin, { LoginData, AuthInfo } from "sn-login";
+import snlogin, { NowSession } from "sn-login";
 import execScript, { TexecFn } from "./lib/script/exec";
 import execQuick from "./lib/script/execQuick";
 import glideAjax, { GlideAjaxData } from "./lib/glide/ajax";
@@ -21,6 +20,9 @@ import {
     retrieveRecords,
     streamRecordsToFile
 } from "./lib/table-api/get"
+import createRecord, { ICreateRecordOptions } from "./lib/table-api/post";
+import updateRecord, { IUpdateRecordOptions } from "./lib/table-api/patch";
+import deleteRecord from "./lib/table-api/delete";
 import { UploadType } from "./lib/attachment/upload";
 import getCurrentAppList from "./lib/application/getCurrentList";
 import switchApp from "./lib/application/switch";
@@ -46,9 +48,12 @@ export interface IGlide {
 }
 
 export interface ITableApi {
+    createRecord(table: string, dataObj: any, options?: ICreateRecordOptions): Promise<any>
+    updateRecord(table: string, sysId: string, dataObj: any, options?: IUpdateRecordOptions): Promise<any>
     retrieveRecord(table: string, sysId: string, options?: IRetrieveRecordOptions): Promise<any>
     retrieveRecords(table: string, options?: IRetrieveRecordsOptions): Promise<any[]>
     streamRecordsToFile(table: string, options: IRetrieveRecordsToFileOptions): Promise<string>
+    deleteRecord(table: string, sysId: string): Promise<number>
 }
 
 export interface IUtil {
@@ -84,7 +89,7 @@ export interface IUpdateSet {
 }
 
 export interface IRequestFunctions {
-    getLoginData(): LoginData
+    getNowSession(): NowSession
     util: IUtil
     glide: IGlide
     script: IScriptInterface
@@ -94,87 +99,82 @@ export interface IRequestFunctions {
     updateSet: IUpdateSet
 }
 
-export async function snRequest(snInstanceName: string, userName: string, auth?: AuthInfo): Promise<IRequestFunctions> {
+export async function snRequest(snInstanceName: string, userName: string, password?: string): Promise<IRequestFunctions> {
 
-    let login: LoginData;
-    try {
-        login = await snlogin(snInstanceName, userName, auth);
-    } catch (e: any) {
-        const rl = createInterface({
-            input: process.stdin,
-            output: process.stdout
-        });
-        let questionText = "Login failed, try again with new MFA Token: ";
-        let mfaToken = await new Promise<string>(resolve => rl.question(questionText, resolve))
-            .finally(() => rl.close());
-        let authObj = { "mfaToken": mfaToken } as AuthInfo;
-        if (auth && auth.password) authObj.password = auth.password;
-        login = await snlogin(snInstanceName, userName, authObj);
-    }
-    if (!login) throw "Login has failed ...";
-
-    let getLoginData = function (): LoginData {
-        return login;
+    let nowSession = await snlogin(snInstanceName, userName, password);
+    let getNowSession = function (): NowSession {
+        return nowSession;
     }
 
     return {
-        "getLoginData": getLoginData,
+        "getNowSession": getNowSession,
         "script": {
-            "eval": R.curry(evalScript)(login),
-            "executeFn": R.curry(execScript)(login),
-            "executeFnQuick": R.curry(execQuick)(login)
+            "eval": R.curry(evalScript)(nowSession),
+            "executeFn": R.curry(execScript)(nowSession),
+            "executeFnQuick": R.curry(execQuick)(nowSession)
         },
         "application": {
             "getCurrentList": async function (): Promise<any> {
-                return getCurrentAppList(login);
+                return getCurrentAppList(nowSession);
             },
             "switch": async function (applicationSysId: string): Promise<any> {
-                return switchApp(login, applicationSysId);
+                return switchApp(nowSession, applicationSysId);
             }
         },
         "attachment": {
-            "retrieve": R.curry(retrieveAttachment)(login),
-            "delete": R.curry(deleteAttachment)(login),
+            "retrieve": R.curry(retrieveAttachment)(nowSession),
+            "delete": R.curry(deleteAttachment)(nowSession),
             "upload": async (uploadType: UploadType, table: string, sysId: string,
                 input: string, fileName?: string): Promise<string> => {
-                return uploadAttachment(login, uploadType, table, sysId, input, fileName);
+                return uploadAttachment(nowSession, uploadType, table, sysId, input, fileName);
             }
         },
         "glide": {
-            "glideAjax": R.curry(glideAjax)(login)
+            "glideAjax": R.curry(glideAjax)(nowSession)
         },
         "tableApi": {
+            "createRecord": async function (
+                table: string, dataObj: any, options?: ICreateRecordOptions
+            ): Promise<any> {
+                return createRecord(nowSession, table, dataObj, options);
+            },
+            "updateRecord": async function (
+                table: string, sysId: string, dataObj: any, options?: IUpdateRecordOptions
+            ): Promise<any> {
+                return updateRecord(nowSession, table, sysId, dataObj, options);
+            },
             "retrieveRecord": async function (
                 table: string, sysId: string, options?: IRetrieveRecordOptions
             ): Promise<any> {
-                return retrieveRecord(login, table, sysId, options);
+                return retrieveRecord(nowSession, table, sysId, options);
             },
             "retrieveRecords": async function (
                 table: string, options?: IRetrieveRecordsOptions
             ): Promise<any[]> {
-                return retrieveRecords(login, table, options);
+                return retrieveRecords(nowSession, table, options);
             },
-            "streamRecordsToFile": R.curry(streamRecordsToFile)(login)
+            "streamRecordsToFile": R.curry(streamRecordsToFile)(nowSession),
+            "deleteRecord": R.curry(deleteRecord)(nowSession)
         },
         "util": {
-            "xmlImport": R.curry(xmlImport)(login),
-            "xmlExport": R.curry(xmlExport)(login),
-            "xmlHttpRequest": R.curry(xmlHttp)(login),
-            "getTableSchema": R.curry(getTableSchema)(login),
+            "xmlImport": R.curry(xmlImport)(nowSession),
+            "xmlExport": R.curry(xmlExport)(nowSession),
+            "xmlHttpRequest": R.curry(xmlHttp)(nowSession),
+            "getTableSchema": R.curry(getTableSchema)(nowSession),
             "clearCache": async function (invalidate?: boolean): Promise<string> {
-                return clearCache(login, invalidate);
+                return clearCache(nowSession, invalidate);
             }
         },
         "updateSet": {
-            "create": R.curry(createUpdateSet)(login),
+            "create": R.curry(createUpdateSet)(nowSession),
             "getCurrentList": async function () {
-                return getCurrentUpdateSetList(login);
+                return getCurrentUpdateSetList(nowSession);
             },
-            "exportToXml": R.curry(exportUpdateSetToXml)(login),
-            "preview": R.curry(previewUpdateSet)(login),
-            "switch": R.curry(switchUpdateSet)(login),
-            "validate": R.curry(validateUpdateSet)(login),
-            "commit": R.curry(commitUpdateSet)(login)
+            "exportToXml": R.curry(exportUpdateSetToXml)(nowSession),
+            "preview": R.curry(previewUpdateSet)(nowSession),
+            "switch": R.curry(switchUpdateSet)(nowSession),
+            "validate": R.curry(validateUpdateSet)(nowSession),
+            "commit": R.curry(commitUpdateSet)(nowSession)
         }
     };
 }

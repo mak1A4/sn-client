@@ -35,11 +35,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import createRecord from "../table-api/post";
-export default function (login, name, scope) {
+export default function (session, name, scope) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, createRecord(login, "sys_update_set", {
+                case 0: return [4 /*yield*/, createRecord(session, "sys_update_set", {
                         "name": name
                     })];
                 case 1: 

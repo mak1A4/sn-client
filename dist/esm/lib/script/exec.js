@@ -40,7 +40,7 @@ import attachmentUpload, { UploadType } from "../attachment/upload";
 import attachmentRetrieve from "../attachment/retrieve";
 import attachmentDelete from "../attachment/delete";
 import * as fs from "fs";
-export default function (login, scope, rollback, timeout) {
+export default function (session, scope, rollback, timeout) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             return [2 /*return*/, function (snExecFn, inputObject) {
@@ -51,13 +51,13 @@ export default function (login, scope, rollback, timeout) {
                             switch (_a.label) {
                                 case 0:
                                     fakeSysId = randomUUID().replace(/-/g, "");
-                                    return [4 /*yield*/, attachmentUpload(login, UploadType.JsonString, "temp", fakeSysId, JSON.stringify(inputObject), fakeSysId + ".json")];
+                                    return [4 /*yield*/, attachmentUpload(session, UploadType.JsonString, "temp", fakeSysId, JSON.stringify(inputObject), fakeSysId + ".json")];
                                 case 1:
                                     inputAttachmentSysId = _a.sent();
                                     getInputObjFnStr = fs.readFileSync("./asset/getInputObj.js", "utf8");
                                     getOutputObjFnStr = fs.readFileSync("./asset/getOutputObj.js", "utf8");
                                     execScript = "var inputObj = (".concat(getInputObjFnStr, ")('").concat(inputAttachmentSysId, "');\n       var result = (").concat(snExecFn.toString(), ")(inputObj);\n       var outAttachmentSysId = (").concat(getOutputObjFnStr, ")(result);\n       gs.debug(\"=####\" + outAttachmentSysId + \"####=\")");
-                                    return [4 /*yield*/, evalScript(login, {
+                                    return [4 /*yield*/, evalScript(session, {
                                             "script": execScript,
                                             "scope": scope,
                                             "rollback": rollback,
@@ -68,7 +68,7 @@ export default function (login, scope, rollback, timeout) {
                                     jsonResultMatch = evalResult.response.match(/=####.*?####=/g);
                                     if (!jsonResultMatch) return [3 /*break*/, 4];
                                     resultAttachmentSysId = jsonResultMatch.map(function (s) { return s; })[0].replace("####=", "").replace("=####", "");
-                                    return [4 /*yield*/, attachmentRetrieve(login, resultAttachmentSysId)];
+                                    return [4 /*yield*/, attachmentRetrieve(session, resultAttachmentSysId)];
                                 case 3:
                                     resultObjPath = _a.sent();
                                     resultObjStr = fs.readFileSync(resultObjPath, "utf8");
@@ -80,8 +80,8 @@ export default function (login, scope, rollback, timeout) {
                                         buff = Buffer.from(resultObjStr, "base64");
                                         resultObj = JSON.parse(buff.toString("utf8"));
                                     }
-                                    attachmentDelete(login, inputAttachmentSysId);
-                                    attachmentDelete(login, resultAttachmentSysId);
+                                    attachmentDelete(session, inputAttachmentSysId);
+                                    attachmentDelete(session, resultAttachmentSysId);
                                     return [2 /*return*/, {
                                             "result": resultObj,
                                             "rollbackLink": evalResult.rollbackLink
