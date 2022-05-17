@@ -56,8 +56,8 @@ export default function (session, scope, rollback, timeout) {
                                     inputAttachmentSysId = _a.sent();
                                     url = __dirname;
                                     console.log(url);
-                                    getInputObjFnStr = fs.readFileSync("./asset/getInputObj.js", "utf8");
-                                    getOutputObjFnStr = fs.readFileSync("./asset/getOutputObj.js", "utf8");
+                                    getInputObjFnStr = fs.readFileSync("./assets/getInputObj.js", "utf8");
+                                    getOutputObjFnStr = fs.readFileSync("./assets/getOutputObj.js", "utf8");
                                     execScript = "var inputObj = (".concat(getInputObjFnStr, ")('").concat(inputAttachmentSysId, "');\n       var result = (").concat(snExecFn.toString(), ")(inputObj);\n       var outAttachmentSysId = (").concat(getOutputObjFnStr, ")(result);\n       gs.debug(\"=####\" + outAttachmentSysId + \"####=\")");
                                     return [4 /*yield*/, evalScript(session, {
                                             "script": execScript,
