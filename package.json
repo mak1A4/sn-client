@@ -6,7 +6,8 @@
     "module": "dist/esm/index.js",
     "types": "dist/types/index.d.ts",
     "files": [
-        "dist"
+        "dist",
+        "assets"
     ],
     "scripts": {
         "build": "npm run build:cjs && npm run build:esm && npm run build:types",

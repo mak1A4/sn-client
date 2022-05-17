@@ -46,7 +46,7 @@ export default function (session, scope, rollback, timeout) {
             return [2 /*return*/, function (snExecFn, inputObject) {
                     if (inputObject === void 0) { inputObject = {}; }
                     return __awaiter(this, void 0, void 0, function () {
-                        var fakeSysId, inputAttachmentSysId, getInputObjFnStr, getOutputObjFnStr, execScript, evalResult, jsonResultMatch, resultAttachmentSysId, resultObjPath, resultObjStr, resultObj, buff;
+                        var fakeSysId, inputAttachmentSysId, url, getInputObjFnStr, getOutputObjFnStr, execScript, evalResult, jsonResultMatch, resultAttachmentSysId, resultObjPath, resultObjStr, resultObj, buff;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
@@ -54,6 +54,8 @@ export default function (session, scope, rollback, timeout) {
                                     return [4 /*yield*/, attachmentUpload(session, UploadType.JsonString, "temp", fakeSysId, JSON.stringify(inputObject), fakeSysId + ".json")];
                                 case 1:
                                     inputAttachmentSysId = _a.sent();
+                                    url = __dirname;
+                                    console.log(url);
                                     getInputObjFnStr = fs.readFileSync("./asset/getInputObj.js", "utf8");
                                     getOutputObjFnStr = fs.readFileSync("./asset/getOutputObj.js", "utf8");
                                     execScript = "var inputObj = (".concat(getInputObjFnStr, ")('").concat(inputAttachmentSysId, "');\n       var result = (").concat(snExecFn.toString(), ")(inputObj);\n       var outAttachmentSysId = (").concat(getOutputObjFnStr, ")(result);\n       gs.debug(\"=####\" + outAttachmentSysId + \"####=\")");

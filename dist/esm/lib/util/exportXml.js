@@ -34,14 +34,45 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+import * as fs from "fs";
+import * as os from "os";
+import * as path from "path";
+import * as stream from 'stream';
+import { promisify } from 'util';
+/*export default async function (session: NowSession, input: IExportXmlInput): Promise<string> {
+
+    let url = `/${input.table}.do?UNL`;
+    if (input.query) url += `&sysparm_query=${input.query}`;
+    let response = await session.httpClient.get(url, {
+        headers: {
+            "X-UserToken": session.userToken,
+            "Connection": "keep-alive",
+            "Cache-Control": "max-age=0",
+        }
+    });
+    if (input.filePath) {
+        fs.writeFileSync(input.filePath, response.data, "utf8");
+    }
+    return response.data;
+}*/
 export default function (session, input) {
     return __awaiter(this, void 0, void 0, function () {
-        var url, response;
+        var outputFile, randomStr, finished, writer, url, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    url = "/".concat(input.table, ".do?UNL&sysparm_query=").concat(input.query);
+                    outputFile = input.outputFile;
+                    if (!outputFile) {
+                        randomStr = Math.random().toString(36).substring(2);
+                        outputFile = path.join(os.tmpdir(), "".concat(input.table, "_").concat(randomStr, ".xml"));
+                    }
+                    finished = promisify(stream.finished);
+                    writer = fs.createWriteStream(outputFile);
+                    url = "/".concat(input.table, ".do?UNL");
+                    if (input.query)
+                        url += "&sysparm_query=".concat(input.query);
                     return [4 /*yield*/, session.httpClient.get(url, {
+                            responseType: "stream",
                             headers: {
                                 "X-UserToken": session.userToken,
                                 "Connection": "keep-alive",
@@ -50,7 +81,11 @@ export default function (session, input) {
                         })];
                 case 1:
                     response = _a.sent();
-                    return [2 /*return*/, response.data];
+                    response.data.pipe(writer);
+                    return [4 /*yield*/, finished(writer)];
+                case 2:
+                    _a.sent();
+                    return [2 /*return*/, outputFile];
             }
         });
     });

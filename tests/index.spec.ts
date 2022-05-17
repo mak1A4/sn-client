@@ -1,3 +1,4 @@
+import { readFileSync } from "fs";
 import snrequest, { NowClient } from "../src/index";
 import keepAlive from "../src/lib/util/keepAlive";
 let instance = process.env.SN_INSTANCE as string;
@@ -114,10 +115,11 @@ describe("util module", () => {
     });
     test("xmlExport function", async () => {
         let snclient = await getNowClient();
-        let result = await snclient.util.xmlExport({
+        let outFile = await snclient.util.xmlExport({
             "table": "incident",
             "query": "number=INC0010001"
-        })
+        });
+        let result = readFileSync(outFile, "utf8");
         let resultXmlFound = result !== "";
         expect(resultXmlFound).toBe(true);
     });
