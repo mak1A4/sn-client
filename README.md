@@ -1,1 +1,1 @@
-# sn-request
+# sn-client

@@ -50,7 +50,7 @@ export interface IUpdateSet {
     validate(remoteUpdateSetSysId: string, scope: string): Promise<any>;
     commit(remoteUpdateSetSysId: string, scope: string): Promise<any>;
 }
-export interface IRequestFunctions {
+export interface NowClient {
     getNowSession(): NowSession;
     util: IUtil;
     glide: IGlide;
@@ -60,5 +60,5 @@ export interface IRequestFunctions {
     attachment: IAttachment;
     updateSet: IUpdateSet;
 }
-export declare function snRequest(snInstanceName: string, userName: string, password?: string): Promise<IRequestFunctions>;
+export declare function snRequest(snInstanceName: string, userName: string, password?: string): Promise<NowClient>;
 export default snRequest;

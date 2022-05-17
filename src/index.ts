@@ -88,7 +88,7 @@ export interface IUpdateSet {
     commit(remoteUpdateSetSysId: string, scope: string): Promise<any>
 }
 
-export interface IRequestFunctions {
+export interface NowClient {
     getNowSession(): NowSession
     util: IUtil
     glide: IGlide
@@ -99,12 +99,12 @@ export interface IRequestFunctions {
     updateSet: IUpdateSet
 }
 
-export async function snRequest(snInstanceName: string, userName: string, password?: string): Promise<IRequestFunctions> {
+export async function snRequest(snInstanceName: string, userName: string, password?: string): Promise<NowClient> {
 
     let nowSession = await snlogin(snInstanceName, userName, password);
     let getNowSession = function (): NowSession {
         return nowSession;
-    }
+    };
 
     return {
         "getNowSession": getNowSession,

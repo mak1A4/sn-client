@@ -1,11 +1,11 @@
-import snrequest, { IRequestFunctions } from "../src/index";
+import snrequest, { NowClient } from "../src/index";
 import keepAlive from "../src/lib/util/keepAlive";
 let instance = process.env.SN_INSTANCE as string;
 let user = process.env.SN_USER as string;
 let pass = process.env.SN_PASS as string;
 
-let _client: IRequestFunctions;
-async function getSnClient(): Promise<IRequestFunctions> {
+let _client: NowClient;
+async function getNowClient(): Promise<NowClient> {
     if (!_client) _client = await snrequest(instance, user, pass);
     return _client;
 }
@@ -13,7 +13,7 @@ async function getSnClient(): Promise<IRequestFunctions> {
 describe("script module", () => {
 
     test("executeFn function", async () => {
-        let snclient = await getSnClient();
+        let snclient = await getNowClient();
         let execFn = await snclient.script.executeFn("global", true, true);
         let execResult = await execFn(function (inputObj: any) {
             //@ts-ignore
@@ -30,7 +30,7 @@ describe("script module", () => {
     });
 
     test("executeFnQuick function", async () => {
-        let snclient = await getSnClient();
+        let snclient = await getNowClient();
         let execFn = await snclient.script.executeFnQuick("global", true, true);
         let execResult = await execFn(function (inputObj: any) {
             //@ts-ignore
@@ -47,7 +47,7 @@ describe("script module", () => {
     });
 
     test("eval function", async () => {
-        let snclient = await getSnClient();
+        let snclient = await getNowClient();
         let evalResult = await snclient.script.eval({
             "script": "gs.print('$$TEST_PASSED$$')",
             "scope": "global",
@@ -61,7 +61,7 @@ describe("script module", () => {
 
 describe("application module", () => {
     test("getCurrentList function", async () => {
-        let snclient = await getSnClient();
+        let snclient = await getNowClient();
         let result = await snclient.application.getCurrentList();
 
         let applicationsFound = result.list && result.list.length > 0;
@@ -71,7 +71,7 @@ describe("application module", () => {
 
     test("switch function", async () => {
 
-        let snclient = await getSnClient();
+        let snclient = await getNowClient();
         await snclient.application.switch("global");
         let gresult = await snclient.application.getCurrentList();
         let firstSwitchWorked = gresult.current == "global";
@@ -88,7 +88,7 @@ describe("application module", () => {
 
 describe("glide module", () => {
     test("glideAjax function", async () => {
-        let snclient = await getSnClient();
+        let snclient = await getNowClient();
         var parms = new Map<string, string>();
         parms.set("sysparm_table", "sys_script_include");
         parms.set("sysparm_sys_id", "59af71769368501079f4dc2a767ffb36");
@@ -107,13 +107,13 @@ describe("glide module", () => {
 describe("util module", () => {
 
     test("clearCache function", async () => {
-        let snclient = await getSnClient();
+        let snclient = await getNowClient();
         let result = await snclient.util.clearCache(true);
         let cacheCleared = result.indexOf("Servlet Memory") >= 0;
         expect(cacheCleared).toBe(true);
     });
     test("xmlExport function", async () => {
-        let snclient = await getSnClient();
+        let snclient = await getNowClient();
         let result = await snclient.util.xmlExport({
             "table": "incident",
             "query": "number=INC0010001"
@@ -122,8 +122,8 @@ describe("util module", () => {
         expect(resultXmlFound).toBe(true);
     });
     test("xmlImport function", async () => {
-        let filePath = "/Users/mak/Development/Node/servicenow/sn-request/tests/sys_script_include_c773513c870b0550b8210f6c8bbb35fc.xml"
-        let snclient = await getSnClient();
+        let filePath = "/Users/mak/Development/Node/servicenow/sn-client/tests/sys_script_include_c773513c870b0550b8210f6c8bbb35fc.xml"
+        let snclient = await getNowClient();
         let response = await snclient.util.xmlImport({
             "target": "sys_script_include",
             "filePath": filePath
@@ -132,19 +132,19 @@ describe("util module", () => {
         expect(success).toBe(true);
     });
     test("keepAlive function", async () => {
-        let snclient = await getSnClient();
+        let snclient = await getNowClient();
         let response = await keepAlive(snclient.getNowSession());
         let success = response === "complete";
         expect(success).toBe(true);
     });
     test("getTableSchema function", async () => {
-        let snclient = await getSnClient();
+        let snclient = await getNowClient();
         let incidentTableSchema = await snclient.util.getTableSchema("incident");
         let success = incidentTableSchema && incidentTableSchema.length > 0;
         expect(success).toBe(true);
     });
     test("xmlHttpRequest function", async () => {
-        let snclient = await getSnClient();
+        let snclient = await getNowClient();
         
         var parms = new Map<string, string>();
         parms.set("sysparm_name", "createCleanName");

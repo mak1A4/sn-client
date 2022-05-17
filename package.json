@@ -1,5 +1,5 @@
 {
-    "name": "sn-request",
+    "name": "sn-client",
     "version": "1.0.0",
     "description": "",
     "main": "dist/cjs/index.js",
@@ -19,14 +19,14 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/mak1A4/sn-request.git"
+        "url": "git+https://github.com/mak1A4/sn-client.git"
     },
     "author": "mak1A4",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/mak1A4/sn-request/issues"
+        "url": "https://github.com/mak1A4/sn-client/issues"
     },
-    "homepage": "https://github.com/mak1A4/sn-request#readme",
+    "homepage": "https://github.com/mak1A4/sn-client#readme",
     "devDependencies": {
         "@types/cheerio": "^0.22.31",
         "@types/jest": "^27.4.1",
