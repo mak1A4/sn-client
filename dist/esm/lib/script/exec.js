@@ -56,10 +56,10 @@ export default function (session, scope, rollback, timeout) {
                                 case 1:
                                     inputAttachmentSysId = _a.sent();
                                     if (__dirname.indexOf("/cjs/") >= 0) {
-                                        assetPath = path.join(__dirname, "..", "..", "..", "assets");
+                                        assetPath = path.join(__dirname, "..", "..", "..", "..", "assets");
                                     }
                                     else {
-                                        assetPath = path.join(__dirname, "..", "..", "assets");
+                                        assetPath = path.join(__dirname, "..", "..", "..", "assets");
                                     }
                                     getInputObjFnStr = fs.readFileSync(path.join(assetPath, "getInputObj.js"), "utf8");
                                     getOutputObjFnStr = fs.readFileSync(path.join(assetPath, "getOutputObj.js"), "utf8");

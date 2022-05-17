@@ -28,9 +28,9 @@ export default async function (
 
         let assetPath: string;
         if (__dirname.indexOf("/cjs/") >= 0) {
-            assetPath = path.join(__dirname, "..", "..", "..", "assets");
+            assetPath = path.join(__dirname, "..", "..", "..", "..", "assets");
         } else {
-            assetPath = path.join(__dirname, "..", "..", "assets");
+            assetPath = path.join(__dirname, "..", "..", "..", "assets");
         }
 
         let getInputObjFnStr = fs.readFileSync(path.join(assetPath, "getInputObj.js"), "utf8");
