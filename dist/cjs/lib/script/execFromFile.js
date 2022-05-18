@@ -70,6 +70,7 @@ var upload_1 = __importStar(require("../attachment/upload"));
 var retrieve_1 = __importDefault(require("../attachment/retrieve"));
 var delete_1 = __importDefault(require("../attachment/delete"));
 function default_1(session, scope, rollback, timeout, fnFilePath, inputObject) {
+    if (inputObject === void 0) { inputObject = {}; }
     return __awaiter(this, void 0, void 0, function () {
         var fakeSysId, inputAttachmentSysId, assetPath, getInputObjFnStr, getOutputObjFnStr, fnStrFromFile, execScript, evalResult, jsonResultMatch, resultAttachmentSysId, resultObjPath, resultObjStr, resultObj, buff;
         return __generator(this, function (_a) {

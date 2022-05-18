@@ -14,7 +14,7 @@ export interface IExecFnResponse {
 
 export default async function (
     session: NowSession, scope: string, rollback: boolean, timeout: boolean,
-    fnFilePath: string, inputObject: any
+    fnFilePath: string, inputObject: any = {}
 ): Promise<IExecFnResponse> {
 
     let fakeSysId = randomUUID().replace(/-/g, "")

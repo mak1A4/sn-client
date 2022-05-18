@@ -42,6 +42,7 @@ import attachmentUpload, { UploadType } from "../attachment/upload";
 import attachmentRetrieve from "../attachment/retrieve";
 import attachmentDelete from "../attachment/delete";
 export default function (session, scope, rollback, timeout, fnFilePath, inputObject) {
+    if (inputObject === void 0) { inputObject = {}; }
     return __awaiter(this, void 0, void 0, function () {
         var fakeSysId, inputAttachmentSysId, assetPath, getInputObjFnStr, getOutputObjFnStr, fnStrFromFile, execScript, evalResult, jsonResultMatch, resultAttachmentSysId, resultObjPath, resultObjStr, resultObj, buff;
         return __generator(this, function (_a) {
