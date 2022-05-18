@@ -14,7 +14,7 @@ export interface IScriptInterface {
     eval(script: EvalScriptData): Promise<EvalScriptResponse>;
     executeFn(scope: string, rollback: boolean, timeout: boolean): Promise<TexecFn>;
     executeFnQuick(scope: string, rollback: boolean, timeout: boolean): Promise<TexecFn>;
-    executeFnFromFile(session: NowSession, scope: string, rollback: boolean, timeout: boolean, fnFilePath: string, inputObject: any): Promise<IExecFnResponse>;
+    executeFnFromFile(scope: string, rollback: boolean, timeout: boolean, fnFilePath: string, inputObject: any): Promise<IExecFnResponse>;
 }
 export interface IGlide {
     glideAjax(data: GlideAjaxData): Promise<string>;
