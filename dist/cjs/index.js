@@ -66,6 +66,7 @@ exports.snRequest = void 0;
 var R = __importStar(require("ramda"));
 var sn_login_1 = __importDefault(require("sn-login"));
 var exec_1 = __importDefault(require("./lib/script/exec"));
+var execFromFile_1 = __importDefault(require("./lib/script/execFromFile"));
 var execQuick_1 = __importDefault(require("./lib/script/execQuick"));
 var ajax_1 = __importDefault(require("./lib/glide/ajax"));
 var exportXml_1 = __importDefault(require("./lib/util/exportXml"));
@@ -107,7 +108,8 @@ function snRequest(snInstanceName, userName, password) {
                             "script": {
                                 "eval": R.curry(eval_1.default)(nowSession),
                                 "executeFn": R.curry(exec_1.default)(nowSession),
-                                "executeFnQuick": R.curry(execQuick_1.default)(nowSession)
+                                "executeFnQuick": R.curry(execQuick_1.default)(nowSession),
+                                "executeFnFromFile": R.curry(execFromFile_1.default)(nowSession)
                             },
                             "application": {
                                 "getCurrentList": function () {

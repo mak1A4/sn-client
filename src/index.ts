@@ -1,6 +1,7 @@
 import * as R from "ramda";
 import snlogin, { NowSession } from "sn-login";
 import execScript, { TexecFn } from "./lib/script/exec";
+import execFromFile, { IExecFnResponse } from "./lib/script/execFromFile";
 import execQuick from "./lib/script/execQuick";
 import glideAjax, { GlideAjaxData } from "./lib/glide/ajax";
 import xmlExport, { IExportXmlInput } from "./lib/util/exportXml";
@@ -41,6 +42,8 @@ export interface IScriptInterface {
     eval(script: EvalScriptData): Promise<EvalScriptResponse>
     executeFn(scope: string, rollback: boolean, timeout: boolean): Promise<TexecFn>
     executeFnQuick(scope: string, rollback: boolean, timeout: boolean): Promise<TexecFn>
+    executeFnFromFile(session: NowSession, scope: string, rollback: boolean,
+        timeout: boolean, fnFilePath: string, inputObject: any): Promise<IExecFnResponse>
 }
 
 export interface IGlide {
@@ -111,7 +114,8 @@ export async function snRequest(snInstanceName: string, userName: string, passwo
         "script": {
             "eval": R.curry(evalScript)(nowSession),
             "executeFn": R.curry(execScript)(nowSession),
-            "executeFnQuick": R.curry(execQuick)(nowSession)
+            "executeFnQuick": R.curry(execQuick)(nowSession),
+            "executeFnFromFile": R.curry(execFromFile)(nowSession)
         },
         "application": {
             "getCurrentList": async function (): Promise<any> {

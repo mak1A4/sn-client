@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 import * as R from "ramda";
 import snlogin from "sn-login";
 import execScript from "./lib/script/exec";
+import execFromFile from "./lib/script/execFromFile";
 import execQuick from "./lib/script/execQuick";
 import glideAjax from "./lib/glide/ajax";
 import xmlExport from "./lib/util/exportXml";
@@ -78,7 +79,8 @@ export function snRequest(snInstanceName, userName, password) {
                             "script": {
                                 "eval": R.curry(evalScript)(nowSession),
                                 "executeFn": R.curry(execScript)(nowSession),
-                                "executeFnQuick": R.curry(execQuick)(nowSession)
+                                "executeFnQuick": R.curry(execQuick)(nowSession),
+                                "executeFnFromFile": R.curry(execFromFile)(nowSession)
                             },
                             "application": {
                                 "getCurrentList": function () {

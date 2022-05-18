@@ -1,5 +1,6 @@
 import { NowSession } from "sn-login";
 import { TexecFn } from "./lib/script/exec";
+import { IExecFnResponse } from "./lib/script/execFromFile";
 import { GlideAjaxData } from "./lib/glide/ajax";
 import { IExportXmlInput } from "./lib/util/exportXml";
 import { IXmlImportInput } from "./lib/util/importXml";
@@ -13,6 +14,7 @@ export interface IScriptInterface {
     eval(script: EvalScriptData): Promise<EvalScriptResponse>;
     executeFn(scope: string, rollback: boolean, timeout: boolean): Promise<TexecFn>;
     executeFnQuick(scope: string, rollback: boolean, timeout: boolean): Promise<TexecFn>;
+    executeFnFromFile(session: NowSession, scope: string, rollback: boolean, timeout: boolean, fnFilePath: string, inputObject: any): Promise<IExecFnResponse>;
 }
 export interface IGlide {
     glideAjax(data: GlideAjaxData): Promise<string>;
