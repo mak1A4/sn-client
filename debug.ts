@@ -21,64 +21,75 @@ var pass = process.env.SN_PASS as string;
 
 (async function () {
 
-  var sw = new StopWatch();
-  let $sn = await snrequest(instance, user);
-  let login = $sn.getNowSession();
+    var sw = new StopWatch();
+    let $sn = await snrequest(instance, user);
+    let login = $sn.getNowSession();
 
-  sw.start("request");
-  // let res = await retrieveRecords(login, "incident", {
-  //   "encodedQuery": "active=true"
-  // });
-  // console.log(res);
+    //let $target = await snrequest("devtwinformatics", "505053@corpnet.at");
+    let $target = await snrequest("dev56909", "admin", "DyRILli+$06n");
+    let execFn = await $target.script.executeFn("global", true, true);
+    let execResult = await execFn(function (inputObj) {
+        var count = 0;
+        for (var i = 0; i <= 1456500000; i++) { count = i; }
+        return { "count": count };
+    }, { "test": "xyz" });
+    //let execResult = await deleteRecordsWithInvalidReferences($target, "cmdb_rel_ci");
+    console.log(execResult);
 
-  // let res = await streamRecordsToFile(login, "incident", {
-  //   "encodedQuery": "active=true",
-  //   "chunkSize": 5
-  // });
-  // let res = await createRecord(login, "incident", {
-  //   "short_description": "test"
-  // });
+    sw.start("request");
+    // let res = await retrieveRecords(login, "incident", {
+    //   "encodedQuery": "active=true"
+    // });
+    // console.log(res);
 
-  // let res = await clearCache(login, true);
-  // console.log(res);
+    // let res = await streamRecordsToFile(login, "incident", {
+    //   "encodedQuery": "active=true",
+    //   "chunkSize": 5
+    // });
+    // let res = await createRecord(login, "incident", {
+    //   "short_description": "test"
+    // });
 
-  // let res = await getUpdateSetList(login);
+    // let res = await clearCache(login, true);
+    // console.log(res);
 
-  let res = await exportUpdateSet(login, "761bd1cfdb190510ecec1a4813961962", "global");
-  console.log(res);
+    // let res = await getUpdateSetList(login);
 
-  //let res = await tableSchema(login, "incident");
-  //console.log(res);
-  // var qe = await execQuick(login, "global", false, true);
-  // var res = await qe(function(inputObj) {
-  //   //@ts-ignore
-  //   gs.debug(inputObj.test);
-  //   return { "test": inputObj.test }
-  // }, { "test": "xyz" })
-  // console.log(res.response);
-  sw.stop();
-  sw.prettyPrint();
+    let res = await exportUpdateSet(login, "761bd1cfdb190510ecec1a4813961962", "global");
+    console.log(res);
+
+    //let res = await tableSchema(login, "incident");
+    //console.log(res);
+    // var qe = await execQuick(login, "global", false, true);
+    // var res = await qe(function(inputObj) {
+    //   //@ts-ignore
+    //   gs.debug(inputObj.test);
+    //   return { "test": inputObj.test }
+    // }, { "test": "xyz" })
+    // console.log(res.response);
+    sw.stop();
+    sw.prettyPrint();
 
 
-  // sw.start("script exec");
-  // let exec = await $sn.execScript("global", true, true);
-  // //let inputObjStr = fs.readFileSync("/Users/mak/Downloads/22819d36db0b4150bc96827813961930.json", "utf8");
-  // var inputObjStr = JSON.stringify(["1","2","3"]);
-  // let res = await exec(function (inputObj) {
-  //   //make it possible to return simple values not only objects
-  //   //@ts-ignore
-  //   var result = [];
-  //   for (var i = 0; i < 2; i++) {
-  //     result.push({
-  //       //@ts-ignore
-  //       "sys_id": gs.generateGUID()
-  //     });
-  //   }
-  //   return result;
-  // }, JSON.parse(inputObjStr));
-  // sw.stop();
-  // sw.prettyPrint();
-  // console.log(res);
+    // sw.start("script exec");
+    // let exec = await $sn.execScript("global", true, true);
+    // //let inputObjStr = fs.readFileSync("/Users/mak/Downloads/22819d36db0b4150bc96827813961930.json", "utf8");
+    // var inputObjStr = JSON.stringify(["1","2","3"]);
+    // let res = await exec(function (inputObj) {
+    //   //make it possible to return simple values not only objects
+    //   //@ts-ignore
+    //   var result = [];
+    //   for (var i = 0; i < 2; i++) {
+    //     result.push({
+    //       //@ts-ignore
+    //       "sys_id": gs.generateGUID()
+    //     });
+    //   }
+    //   return result;
+    // }, JSON.parse(inputObjStr));
+    // sw.stop();
+    // sw.prettyPrint();
+    // console.log(res);
 
 })();
 

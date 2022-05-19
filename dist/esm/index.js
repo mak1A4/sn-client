@@ -62,13 +62,13 @@ import previewUpdateSet from "./lib/update-set/preview";
 import validateUpdateSet from "./lib/update-set/validate";
 import switchUpdateSet from "./lib/update-set/switch";
 import getCurrentUpdateSetList from "./lib/update-set/getCurrentList";
-export function snRequest(snInstanceName, userName, password) {
+export function getNowClient(snInstanceName, userName, password, newSession) {
     return __awaiter(this, void 0, void 0, function () {
         var nowSession, getNowSession;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, snlogin(snInstanceName, userName, password)];
+                case 0: return [4 /*yield*/, snlogin(snInstanceName, userName, password, newSession)];
                 case 1:
                     nowSession = _a.sent();
                     getNowSession = function () {
@@ -175,4 +175,4 @@ export function snRequest(snInstanceName, userName, password) {
         });
     });
 }
-export default snRequest;
+export default getNowClient;

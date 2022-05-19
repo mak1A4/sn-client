@@ -62,7 +62,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.snRequest = void 0;
+exports.getNowClient = void 0;
 var R = __importStar(require("ramda"));
 var sn_login_1 = __importDefault(require("sn-login"));
 var exec_1 = __importDefault(require("./lib/script/exec"));
@@ -91,13 +91,13 @@ var preview_1 = __importDefault(require("./lib/update-set/preview"));
 var validate_1 = __importDefault(require("./lib/update-set/validate"));
 var switch_2 = __importDefault(require("./lib/update-set/switch"));
 var getCurrentList_2 = __importDefault(require("./lib/update-set/getCurrentList"));
-function snRequest(snInstanceName, userName, password) {
+function getNowClient(snInstanceName, userName, password, newSession) {
     return __awaiter(this, void 0, void 0, function () {
         var nowSession, getNowSession;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, (0, sn_login_1.default)(snInstanceName, userName, password)];
+                case 0: return [4 /*yield*/, (0, sn_login_1.default)(snInstanceName, userName, password, newSession)];
                 case 1:
                     nowSession = _a.sent();
                     getNowSession = function () {
@@ -204,5 +204,5 @@ function snRequest(snInstanceName, userName, password) {
         });
     });
 }
-exports.snRequest = snRequest;
-exports.default = snRequest;
+exports.getNowClient = getNowClient;
+exports.default = getNowClient;

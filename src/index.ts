@@ -102,9 +102,11 @@ export interface NowClient {
     updateSet: IUpdateSet
 }
 
-export async function snRequest(snInstanceName: string, userName: string, password?: string): Promise<NowClient> {
+export async function getNowClient(
+    snInstanceName: string, userName: string, password?: string, newSession?: boolean
+): Promise<NowClient> {
 
-    let nowSession = await snlogin(snInstanceName, userName, password);
+    let nowSession = await snlogin(snInstanceName, userName, password, newSession);
     let getNowSession = function (): NowSession {
         return nowSession;
     };
@@ -182,4 +184,4 @@ export async function snRequest(snInstanceName: string, userName: string, passwo
         }
     };
 }
-export default snRequest;
+export default getNowClient;

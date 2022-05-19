@@ -30,6 +30,19 @@ describe("script module", () => {
         expect(foundScriptInput).toBe(true);
     });
 
+    test("executeFn function - long run", async () => {
+        jest.setTimeout(250000000);
+        let snclient = await getNowClient();
+        let execFn = await snclient.script.executeFn("global", true, true);
+        let execResult = await execFn(function (inputObj: any) {
+            var count = 0;
+            for (var i = 0; i <= 6942000000; i++) { count = i; }
+            return { "count": count };
+        });
+        let foundScriptCount = execResult.result.count == 250000000;
+        expect(foundScriptCount).toBe(true);
+    });
+
     test("executeFnQuick function", async () => {
         let snclient = await getNowClient();
         let execFn = await snclient.script.executeFnQuick("global", true, true);

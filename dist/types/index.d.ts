@@ -62,5 +62,5 @@ export interface NowClient {
     attachment: IAttachment;
     updateSet: IUpdateSet;
 }
-export declare function snRequest(snInstanceName: string, userName: string, password?: string): Promise<NowClient>;
-export default snRequest;
+export declare function getNowClient(snInstanceName: string, userName: string, password?: string, newSession?: boolean): Promise<NowClient>;
+export default getNowClient;
