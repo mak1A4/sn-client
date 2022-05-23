@@ -64,7 +64,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var keepAlive_1 = __importDefault(require("../util/keepAlive"));
 var cheerio = __importStar(require("cheerio"));
-var h2p = require("html2plaintext");
+//const h2p = require("html2plaintext");
+var html_to_text_1 = require("html-to-text");
 function default_1(session, data) {
     return __awaiter(this, void 0, void 0, function () {
         var postFormData, keepAliveInterval, keepAliveTimeout;
@@ -96,12 +97,22 @@ function default_1(session, data) {
                             clearInterval(keepAliveInterval);
                         else
                             clearTimeout(keepAliveTimeout);
+                        if (response.headers["server"].toLowerCase() === "snow_adc") {
+                            var baseURL = session.httpClient.defaults.baseURL;
+                            console.warn("ADCv2 (snow_adc) load balancer detected.");
+                            console.warn("If this script runs longer than 5 minutes you will receive an error.");
+                            console.warn("The transaction will not be cancelled and will continue to run in the background.");
+                            console.warn("All active transactions link: ".concat(baseURL, "/v_transaction_list.do"));
+                            console.warn("See Now Support PRB1537023 for more information.");
+                        }
                         var res = {};
                         if (data.rollback) {
                             var $ = cheerio.load(response.data);
                             res.rollbackLink = $("a").attr("href");
                         }
-                        res.response = h2p(response.data);
+                        res.response = (0, html_to_text_1.convert)(response.data, {
+                            "preserveNewlines": true
+                        });
                         res.response = res.response.replace("and recovery", "");
                         res.response = res.response.replace("available here", "");
                         res.response = res.response.replace("scriptScript execution history", "");

@@ -25,12 +25,13 @@ var pass = process.env.SN_PASS as string;
     let $sn = await snrequest(instance, user);
     let login = $sn.getNowSession();
 
-    //let $target = await snrequest("devtwinformatics", "505053@corpnet.at");
-    let $target = await snrequest("dev56909", "admin", "DyRILli+$06n");
+    let $target = await snrequest("devtwinformatics", "505053@corpnet.at");
+    //let $target = await snrequest("dev56909", "admin", "DyRILli+$06n");
     let execFn = await $target.script.executeFn("global", true, true);
     let execResult = await execFn(function (inputObj) {
         var count = 0;
-        for (var i = 0; i <= 1456500000; i++) { count = i; }
+        //for (var i = 0; i <= 1456500000; i++) { count = i; }
+        for (var i = 0; i <= 500; i++) { count = i; }
         return { "count": count };
     }, { "test": "xyz" });
     //let execResult = await deleteRecordsWithInvalidReferences($target, "cmdb_rel_ci");

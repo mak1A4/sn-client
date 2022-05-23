@@ -6,7 +6,7 @@ function getOutputObj(resultObj) {
     resultObjStr = JSON.stringify(resultObj);
   } catch (err) {
     var json = new JSON();
-    resultObjStr = StringUtil.base64Encode(json.encode(result));
+    resultObjStr = StringUtil.base64Encode(json.encode(resultObj));
     contentType = "text/plain";
   }
   var aguid = gs.generateGUID();

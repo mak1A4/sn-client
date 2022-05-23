@@ -123,6 +123,7 @@ describe("util module", () => {
     test("clearCache function", async () => {
         let snclient = await getNowClient();
         let result = await snclient.util.clearCache(true);
+        console.log(result);
         let cacheCleared = result.indexOf("Servlet Memory") >= 0;
         expect(cacheCleared).toBe(true);
     });

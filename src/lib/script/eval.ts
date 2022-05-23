@@ -1,7 +1,8 @@
 import { NowSession } from "sn-login";
 import keepAlive from "../util/keepAlive";
 import * as cheerio from "cheerio";
-const h2p = require("html2plaintext");
+//const h2p = require("html2plaintext");
+import { convert } from "html-to-text";
 
 export interface EvalScriptData {
   script: string,
@@ -46,12 +47,23 @@ export default async function (session: NowSession, data: EvalScriptData): Promi
       if (keepAliveInterval) clearInterval(keepAliveInterval);
       else clearTimeout(keepAliveTimeout);
 
+      if (response.headers["server"].toLowerCase() === "snow_adc") {
+          let baseURL = session.httpClient.defaults.baseURL;
+          console.warn("ADCv2 (snow_adc) load balancer detected.");
+          console.warn("If this script runs longer than 5 minutes you will receive an error.")
+          console.warn("The transaction will not be cancelled and will continue to run in the background.");
+          console.warn(`All active transactions link: ${baseURL}/v_transaction_list.do`);
+          console.warn("See Now Support PRB1537023 for more information.")
+      }
+
       let res = {} as EvalScriptResponse;
       if (data.rollback) {
         const $ = cheerio.load(response.data);
         res.rollbackLink = $("a").attr("href") as string;
       }
-      res.response = h2p(response.data);
+      res.response = convert(response.data, {
+          "preserveNewlines": true
+      });
       res.response = res.response.replace("and recovery", "");
       res.response = res.response.replace("available here", "");
       res.response = res.response.replace("scriptScript execution history", "");

@@ -40,7 +40,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var execQuick_1 = __importDefault(require("../script/execQuick"));
-var h2p = require("html2plaintext");
+var html_to_text_1 = require("html-to-text");
+//const h2p = require("html2plaintext");
 function clearCache(session, invalidate) {
     return __awaiter(this, void 0, void 0, function () {
         var response, bodyStr, execFn;
@@ -56,7 +57,9 @@ function clearCache(session, invalidate) {
                     response = _a.sent();
                     bodyStr = response.data;
                     bodyStr = bodyStr.replaceAll("<br/><hr/>", "<br/>======================================================<br/>");
-                    bodyStr = h2p(bodyStr);
+                    bodyStr = (0, html_to_text_1.convert)(bodyStr, {
+                        "preserveNewlines": true
+                    });
                     bodyStr = bodyStr.substring(bodyStr.indexOf("\n") + 1);
                     if (!(invalidate === true)) return [3 /*break*/, 4];
                     return [4 /*yield*/, (0, execQuick_1.default)(session, "global", false, true)];

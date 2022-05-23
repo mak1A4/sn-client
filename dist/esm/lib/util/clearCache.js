@@ -35,7 +35,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import execQuick from "../script/execQuick";
-var h2p = require("html2plaintext");
+import { convert } from "html-to-text";
+//const h2p = require("html2plaintext");
 export default function clearCache(session, invalidate) {
     return __awaiter(this, void 0, void 0, function () {
         var response, bodyStr, execFn;
@@ -51,7 +52,9 @@ export default function clearCache(session, invalidate) {
                     response = _a.sent();
                     bodyStr = response.data;
                     bodyStr = bodyStr.replaceAll("<br/><hr/>", "<br/>======================================================<br/>");
-                    bodyStr = h2p(bodyStr);
+                    bodyStr = convert(bodyStr, {
+                        "preserveNewlines": true
+                    });
                     bodyStr = bodyStr.substring(bodyStr.indexOf("\n") + 1);
                     if (!(invalidate === true)) return [3 /*break*/, 4];
                     return [4 /*yield*/, execQuick(session, "global", false, true)];
